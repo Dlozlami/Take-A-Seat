@@ -1,0 +1,90 @@
+Restuarant App
+=============================
+1. Allows users to browse a list of restaurants 
+2. Make table reservations at their favorite ones. 
+3. Administrative interface 
+  3.1 Manage restaurant listings
+  3.2 View bookings 
+  3.3 Access booking statistics, weekly and monthly basis. 
+  3.4 Confirm when a client arrives at their restaurant on the scheduled day.
+
+===============================================================
+Lets Get started
+
+1. Authentication:
+  Login
+  Signup
+
+2. User Dashboard:
+  Browse Restaurants
+  Restaurant Details
+  Make Reservation
+  View Reservations
+  Profile Settings
+  Notifications
+
+3. Restaurant Owner Dashboard:
+  Login
+    Restaurant Listing Management
+    Add Restaurant
+    Edit Restaurant Details
+  Delete Restaurant
+  View Bookings
+    Booking StatisticsWeekly Stats
+  Monthly Stats
+  Confirm Customer Arrivals
+
+4. Components:
+  Navigation Bar (shared between user and restaurant owner)
+  Restaurant Card (for displaying restaurant details)
+  Reservation Form (for users to make reservations)
+  Reservation Card (for displaying user reservations)
+  Profile Section (for user/owner profiles)
+  Notifications Panel (for displaying notifications)
+  Calendar Picker (for selecting reservation dates)
+  Stats Charts (for visualizing booking statistics)
+  Arrival Confirmation Button (for confirming customer arrivals)
+
+5. Backend Functionality:
+  User Authentication and Authorization
+  Restaurant Listing CRUD Operations
+  Reservation Management
+  Booking Statistics Calculation
+  Notification System
+  Arrival Confirmation Logic
+
+6. Database:
+  User Data (usernames, passwords, profiles)
+  Restaurant Data (name, description, contact info)
+  Reservation Data (user, restaurant, date/time, status)
+  Booking Statistics Data (aggregated booking data)
+  Notification Data (messages, read/unread status)
+
+  ====================================================
+
+  Restaurants={
+	imageURL = link to restaurant image,
+	name = name of restaurant,
+  bio = description of type of cuisine,
+	location = address of restaurant,
+	phone =  of restaurant,
+	email =  of restaurant,
+	numberOfTables,
+	ratings is a list of ratings between 3.5 to 4.9
+}
+
+Reservations={
+  user_name,
+  restaurant_name,
+  restaurant_bio,
+  guests=2
+  date,
+  time
+}
+
+user={
+  name,
+  email,
+  phone,
+  password,
+}
