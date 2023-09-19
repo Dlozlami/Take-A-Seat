@@ -143,12 +143,8 @@ export default function RestaurantCard({ restaurant }) {
               <View style={{ display: "flex", flexDirection: "row" }}>
                 <Text>How many people? </Text>
               </View>
-              <View>
-                <Text>On which date?</Text>
-              </View>
-              <View>
-                <Text>At what time?</Text>
-              </View>
+              <View></View>
+              <View></View>
               {Platform.OS === "web" ? (
                 <>
                   <View
@@ -158,6 +154,7 @@ export default function RestaurantCard({ restaurant }) {
                       alignItems: "flex-start",
                     }}
                   >
+                    <Text>At what time?</Text>
                     <TouchableOpacity
                       onPress={() => setVisible(true)}
                       style={styles.pickerBTN}
@@ -186,6 +183,7 @@ export default function RestaurantCard({ restaurant }) {
                       alignItems: "flex-start",
                     }}
                   >
+                    <Text>On which date?</Text>
                     <TouchableOpacity
                       onPress={() => setOpen(true)}
                       style={styles.pickerBTN}
