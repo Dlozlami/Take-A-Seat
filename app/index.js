@@ -20,11 +20,12 @@ export default function Welcome() {
     const unsubscribe = onAuthStateChanged(authorisation, (authUser) => {
       if (authUser) {
         // User is signed in.
+        console.log("index.js line 23 authUser: ", authUser);
         dispatch(setIsLoggedIn(true));
         nav.push("mainFlow");
       } else {
         // User is signed out.
-        //console.log("_layout line 21 authUser: ", authUser);
+        console.log("index.js line 28 authUser: ", authUser);
         dispatch(setIsLoggedIn(false));
       }
     });

@@ -18,6 +18,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "../assets/css/styles";
 import { DatePickerModal } from "react-native-paper-dates";
 import NumberInput from "./numberInput";
+import { addReservation } from "../features/reservationSlice";
 
 export default function RestaurantCard({ restaurant }) {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ export default function RestaurantCard({ restaurant }) {
     },
     [setOpen, setDate]
   );
-  const [guests, setGuests] = useState(0);
+  const [guests, setGuests] = useState(1);
   const [openModal, setOpenodal] = useState(false);
   const nav = useNavigation();
   const [startDate, setStartDate] = useState(new Date());
@@ -75,7 +76,10 @@ export default function RestaurantCard({ restaurant }) {
     showMode("time");
   };
 
-  const handleBookNow = () => {};
+  const handleBookNow = () => {
+    const reservationData = {};
+    dispatch(addReservation(reservationData));
+  };
 
   return (
     <>
@@ -143,7 +147,12 @@ export default function RestaurantCard({ restaurant }) {
             <View style={{ padding: 20 }}>
               <View style={{ display: "flex", flexDirection: "column" }}>
                 <Text>How many people? </Text>
-                <NumberInput min={1} max={100} />
+                <NumberInput
+                  min={1}
+                  max={100}
+                  value={guests}
+                  setValue={setGuests}
+                />
               </View>
               {Platform.OS === "web" ? (
                 <>

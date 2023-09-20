@@ -34,12 +34,13 @@ export default function Login() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authorisation, (authUser) => {
       if (authUser) {
+        console.log("_layout line 37 authUser: ", authUser);
         // User is signed in.
         dispatch(setIsLoggedIn(true));
         nav.push("mainFlow");
       } else {
         // User is signed out.
-        //console.log("_layout line 21 authUser: ", authUser);
+        console.log("_layout line 43 authUser: ", authUser);
         dispatch(setIsLoggedIn(false));
       }
     });

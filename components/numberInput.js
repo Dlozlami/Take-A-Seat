@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-const NumberInput = ({ min, max }) => {
-  const [value, setValue] = useState(1);
-
+const NumberInput = ({ min, max, value, setValue }) => {
   const handleIncrement = () => {
     if (value < max) {
       setValue(value + 1);
