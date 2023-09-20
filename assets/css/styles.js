@@ -153,6 +153,6 @@ export const styles = {
     backgroundColor: "#5df4a0",
     borderRadius: 10,
     color: "white",
-    marginBottom: 5,
+    marginBottom: 10,
   },
 };

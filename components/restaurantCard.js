@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "../assets/css/styles";
 import { DatePickerModal } from "react-native-paper-dates";
+import NumberInput from "./numberInput";
 
 export default function RestaurantCard({ restaurant }) {
   const dispatch = useDispatch();
@@ -139,12 +140,11 @@ export default function RestaurantCard({ restaurant }) {
                 <Text style={styles.contact}>{restaurant.email}</Text>
               </View>
             </View>
-            <View style={{ width: "100%", padding: 20 }}>
-              <View style={{ display: "flex", flexDirection: "row" }}>
+            <View style={{ padding: 20 }}>
+              <View style={{ display: "flex", flexDirection: "column" }}>
                 <Text>How many people? </Text>
+                <NumberInput min={1} max={100} />
               </View>
-              <View></View>
-              <View></View>
               {Platform.OS === "web" ? (
                 <>
                   <View
@@ -209,6 +209,7 @@ export default function RestaurantCard({ restaurant }) {
                 </>
               ) : (
                 <>
+                  <Text>On which date?</Text>
                   <TouchableOpacity
                     onPress={showDatepicker}
                     style={styles.pickerBTN}
@@ -216,6 +217,7 @@ export default function RestaurantCard({ restaurant }) {
                     <Text>Pick date</Text>
                   </TouchableOpacity>
 
+                  <Text>At what time?</Text>
                   <TouchableOpacity
                     onPress={showTimepicker}
                     style={styles.pickerBTN}
