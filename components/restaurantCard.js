@@ -13,7 +13,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TimePickerModal } from "react-native-paper-dates";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "../assets/css/styles";
 import { DatePickerModal } from "react-native-paper-dates";
@@ -21,9 +21,11 @@ import NumberInput from "./numberInput";
 import { addReservation } from "../features/reservationSlice";
 
 export default function RestaurantCard({ restaurant }) {
+  const { userEmail } = useSelector((store) => store.login);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = React.useState(false);
+
   const onDismiss = React.useCallback(() => {
     setVisible(false);
   }, [setVisible]);
@@ -48,6 +50,7 @@ export default function RestaurantCard({ restaurant }) {
     },
     [setOpen, setDate]
   );
+
   const [guests, setGuests] = useState(1);
   const [openModal, setOpenodal] = useState(false);
   const nav = useNavigation();
@@ -74,10 +77,13 @@ export default function RestaurantCard({ restaurant }) {
 
   const showTimepicker = () => {
     showMode("time");
+    console.log("User email: ", userEmail);
   };
 
   const handleBookNow = () => {
-    const reservationData = {};
+    const reservationData = {
+      restaurantID: restaurant.id,
+    };
     dispatch(addReservation(reservationData));
   };
 
@@ -174,7 +180,9 @@ export default function RestaurantCard({ restaurant }) {
                           size={24}
                           color="black"
                         />
-                        Pick time
+                        {date
+                          ? "Pick time"
+                          : date && date.toTimeString().split(" ")[0]}
                       </Text>
                     </TouchableOpacity>
                     <TimePickerModal
@@ -223,7 +231,12 @@ export default function RestaurantCard({ restaurant }) {
                     onPress={showDatepicker}
                     style={styles.pickerBTN}
                   >
-                    <Text>Pick date</Text>
+                    <MaterialCommunityIcons
+                      name="calendar-month"
+                      size={24}
+                      color="black"
+                    />
+                    <Text>{date.toDateString()}</Text>
                   </TouchableOpacity>
 
                   <Text>At what time?</Text>
@@ -231,6 +244,11 @@ export default function RestaurantCard({ restaurant }) {
                     onPress={showTimepicker}
                     style={styles.pickerBTN}
                   >
+                    <MaterialCommunityIcons
+                      name="clock-time-four-outline"
+                      size={24}
+                      color="black"
+                    />
                     <Text
                       style={{
                         display: "flex",
@@ -238,17 +256,12 @@ export default function RestaurantCard({ restaurant }) {
                         alignItems: "center",
                       }}
                     >
-                      <MaterialCommunityIcons
-                        name="clock-time-four-outline"
-                        size={20}
-                        color="black"
-                      />{" "}
-                      Pick time
+                      {date.toTimeString().split(" ")[0]}
                     </Text>
                   </TouchableOpacity>
                 </>
               )}
-              <Text>selected: {date.toLocaleString()}</Text>
+
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"

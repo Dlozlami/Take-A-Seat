@@ -154,5 +154,7 @@ export const styles = {
     borderRadius: 10,
     color: "white",
     marginBottom: 10,
+    display: "flex",
+    flexDirection: "row",
   },
 };

@@ -11,8 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 import { CTAButton } from "../components/CTAButton";
 import { styles } from "../assets/css/styles";
 const backgroundImage = require("../assets/images/duotone.jpg");
-import { useDispatch } from "react-redux";
-import { loginUser, setIsLoggedIn } from "../features/loginSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, setIsLoggedIn, setUserEmail } from "../features/loginSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { authorisation } from "../firebaseConfig";
 
@@ -37,6 +37,7 @@ export default function Login() {
         console.log("_layout line 37 authUser: ", authUser);
         // User is signed in.
         dispatch(setIsLoggedIn(true));
+        dispatch(setUserEmail(authUser.email));
         nav.push("mainFlow");
       } else {
         // User is signed out.

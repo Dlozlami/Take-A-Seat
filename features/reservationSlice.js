@@ -46,6 +46,26 @@ export const addReservation = createAsyncThunk(
   }
 );
 
+export const getReservation = createAsyncThunk(
+  "reservation/addReservation",
+  async (reservationData, thunkAPI) => {
+    const reservationsCollection = collection(db, "reservations");
+    //console.log("New restaurant adding 12..:");
+
+    try {
+      const newReservation = await addDoc(
+        reservationsCollection,
+        reservationData
+      );
+      Alert.alert("Success", "The reservation has been added successfully.");
+      alert("The reservation has been added successfully.");
+      console.log("New reservation document ID:", newReservation.id);
+    } catch (error) {
+      console.error("Error creating reservation:", error);
+    }
+  }
+);
+
 export const { addItemToList, removeItemFromList, clearitemsList } =
   reservationSlice.actions;
 export default reservationSlice.reducer;

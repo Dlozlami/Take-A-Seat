@@ -3,6 +3,7 @@ import { authorisation } from "../firebaseConfig";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const initialState = {
+  userEmail: null,
   isLoggedIn: false,
 };
 
@@ -25,7 +26,9 @@ export const loginUser = createAsyncThunk(
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("loginSlice line 27 userCredentials:", user.email);
+
         thunkAPI.dispatch(setIsLoggedIn(true));
+        thunkAPI.dispatch(setUserEmail(user.email));
         //nav.replace("login");
       })
       .catch((error) => alert(error.message));
@@ -38,6 +41,10 @@ const loginSlice = createSlice({
   reducers: {
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
+    },
+
+    setUserEmail: (state, action) => {
+      state.userEmail = action.payload;
     },
   },
 });
