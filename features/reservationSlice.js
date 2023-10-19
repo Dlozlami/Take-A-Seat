@@ -25,7 +25,7 @@ const reservationSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getReservation.fulfilled, (state, action) => {
+    builder.addCase(getReservationsByUserEmail.fulfilled, (state, action) => {
       state.reservationsList = action.payload; // Update the state with the fetched lists
     });
   },
@@ -34,8 +34,8 @@ const reservationSlice = createSlice({
 export const addReservation = createAsyncThunk(
   "reservation/addReservation",
   async (reservationData, thunkAPI) => {
+    console.log("New restaurant adding 12..:");
     const reservationsCollection = collection(db, "reservations");
-    //console.log("New restaurant adding 12..:");
 
     try {
       const newReservation = await addDoc(
@@ -56,10 +56,10 @@ export const getReservationsByUserEmail = createAsyncThunk(
   async (userEmail, thunkAPI) => {
     try {
       const reservationsCollection = collection(db, "reservations");
-      const query = query(
-        reservationsCollection,
-        where("userEmail", "==", userEmail)
-      );
+      // const query = query(
+      //   reservationsCollection,
+      //   where("userEmail", "==", userEmail)
+      // );
       const querySnapshot = await getDocs(query);
 
       const reservations = [];

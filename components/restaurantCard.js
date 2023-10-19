@@ -81,11 +81,12 @@ export default function RestaurantCard({ restaurant }) {
   };
 
   const handleBookNow = () => {
+    const today = new Date();
     const reservationData = {
       restaurantID: restaurant.id,
       userEmail: userEmail,
       reservationDate: date.getTime(),
-      reservationMade: new Date().now(),
+      reservationMade: today.getTime(),
       guests: guests,
     };
     dispatch(addReservation(reservationData));
@@ -281,7 +282,7 @@ export default function RestaurantCard({ restaurant }) {
             >
               <TouchableOpacity
                 style={styles.okButton}
-                onPress={() => setOpenodal(false)}
+                onPress={() => handleBookNow()}
               >
                 <Text style={styles.okButtonText}>Book Now</Text>
               </TouchableOpacity>

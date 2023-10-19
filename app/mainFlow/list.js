@@ -14,8 +14,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getReservationsByUserEmail } from "../../features/reservationSlice";
 
 export default function List() {
-  const { reservations } = useSelector((store) => store.reservation);
+  const dispatch = useDispatch();
+  const { reservationsList } = useSelector((store) => store.reservation);
   const { userEmail } = useSelector((store) => store.login);
+
+  useEffect(() => {
+    dispatch(getReservationsByUserEmail(userEmail));
+  });
+
   return (
     <ImageBackground
       source={backgroundImage}

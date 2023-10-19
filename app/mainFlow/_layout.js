@@ -8,6 +8,7 @@ import {
 import HomeScreen from "./home";
 import ProfileScreen from "./profile";
 import ListScreen from "./list";
+import AddRestaurant from "./addRestaurant";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +48,20 @@ export default function MainFlow() {
         <Tab.Screen
           name="profile"
           component={ProfileScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => (
+              <FontAwesome
+                name="user-circle-o"
+                size={24}
+                color={focused ? "#2a6a42" : color}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="addRestaurant"
+          component={AddRestaurant}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused, color, size }) => (

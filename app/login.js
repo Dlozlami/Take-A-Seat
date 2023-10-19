@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CTAButton } from "../components/CTAButton";
 import { styles } from "../assets/css/styles";
 const backgroundImage = require("../assets/images/duotone.jpg");
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginUser, setIsLoggedIn, setUserEmail } from "../features/loginSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { authorisation } from "../firebaseConfig";

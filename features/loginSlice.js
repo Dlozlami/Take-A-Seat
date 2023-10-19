@@ -50,6 +50,6 @@ const loginSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setIsLoggedIn } = loginSlice.actions;
+export const { setIsLoggedIn, setUserEmail } = loginSlice.actions;
 
 export default loginSlice.reducer;

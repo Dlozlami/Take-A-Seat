@@ -6,7 +6,7 @@ import { styles } from "../assets/css/styles";
 import { onAuthStateChanged } from "firebase/auth";
 import { authorisation } from "../firebaseConfig";
 import { useDispatch } from "react-redux";
-import { setIsLoggedIn } from "../features/loginSlice";
+import { setIsLoggedIn, setUserEmail } from "../features/loginSlice";
 const backgroundImage = require("../assets/images/pexels-lina-kivaka-1813502.jpg"); // Update with your actual image path
 
 export default function Welcome() {
@@ -22,6 +22,7 @@ export default function Welcome() {
         // User is signed in.
         console.log("index.js line 23 authUser: ", authUser);
         dispatch(setIsLoggedIn(true));
+        dispatch(setUserEmail(authUser.email));
         nav.push("mainFlow");
       } else {
         // User is signed out.
