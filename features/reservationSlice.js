@@ -7,7 +7,7 @@ import { addDoc, getDocs, collection, setDoc, doc } from "firebase/firestore";
 const initialState = {
   loading: false,
   error: null,
-  reservations: [],
+  reservationsList: [],
 };
 
 const reservationSlice = createSlice({
@@ -23,6 +23,11 @@ const reservationSlice = createSlice({
       state.itemsLength = state.itemsList.length;
       updateSubtotalAndTotal(state);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getReservation.fulfilled, (state, action) => {
+      state.reservationsList = action.payload; // Update the state with the fetched lists
+    });
   },
 });
 
@@ -46,22 +51,31 @@ export const addReservation = createAsyncThunk(
   }
 );
 
-export const getReservation = createAsyncThunk(
-  "reservation/addReservation",
-  async (reservationData, thunkAPI) => {
-    const reservationsCollection = collection(db, "reservations");
-    //console.log("New restaurant adding 12..:");
-
+export const getReservationsByUserEmail = createAsyncThunk(
+  "reservation/getReservationsByUserEmail",
+  async (userEmail, thunkAPI) => {
     try {
-      const newReservation = await addDoc(
+      const reservationsCollection = collection(db, "reservations");
+      const query = query(
         reservationsCollection,
-        reservationData
+        where("userEmail", "==", userEmail)
       );
-      Alert.alert("Success", "The reservation has been added successfully.");
-      alert("The reservation has been added successfully.");
-      console.log("New reservation document ID:", newReservation.id);
+      const querySnapshot = await getDocs(query);
+
+      const reservations = [];
+      querySnapshot.forEach((doc) => {
+        const reservationData = doc.data();
+        const reservation = {
+          id: doc.id, // Extracting the ID
+          ...reservationData, // Rest of the data
+        };
+        reservations.push(reservation);
+      });
+
+      return reservations;
     } catch (error) {
-      console.error("Error creating reservation:", error);
+      console.error("Error getting reservations:", error);
+      throw error;
     }
   }
 );

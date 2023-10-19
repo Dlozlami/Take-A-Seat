@@ -11,15 +11,11 @@ import { CTAButton } from "../../components/CTAButton";
 import { styles } from "../../assets/css/styles";
 const backgroundImage = require("../../assets/images/duotone.jpg");
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loginUser,
-  logoutUser,
-  setIsLoggedIn,
-} from "../../features/loginSlice";
-import { onAuthStateChanged } from "firebase/auth";
-import { authorisation } from "../../firebaseConfig";
+import { getReservationsByUserEmail } from "../../features/reservationSlice";
 
 export default function List() {
+  const { reservations } = useSelector((store) => store.reservation);
+  const { userEmail } = useSelector((store) => store.login);
   return (
     <ImageBackground
       source={backgroundImage}

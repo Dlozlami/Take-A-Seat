@@ -83,6 +83,10 @@ export default function RestaurantCard({ restaurant }) {
   const handleBookNow = () => {
     const reservationData = {
       restaurantID: restaurant.id,
+      userEmail: userEmail,
+      reservationDate: date.getTime(),
+      reservationMade: new Date().now(),
+      guests: guests,
     };
     dispatch(addReservation(reservationData));
   };
