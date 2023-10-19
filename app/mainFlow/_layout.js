@@ -13,6 +13,7 @@ import AddRestaurant from "./addRestaurant";
 const Tab = createBottomTabNavigator();
 
 export default function MainFlow() {
+  
   return (
     <>
       <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
@@ -65,8 +66,8 @@ export default function MainFlow() {
           options={{
             headerShown: false,
             tabBarIcon: ({ focused, color, size }) => (
-              <FontAwesome
-                name="user-circle-o"
+              <MaterialCommunityIcons
+                name="store-plus"
                 size={24}
                 color={focused ? "#2a6a42" : color}
               />

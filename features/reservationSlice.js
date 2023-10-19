@@ -2,7 +2,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authorisation, db } from "../firebaseConfig";
 import { Alert } from "react-native";
-import { addDoc, getDocs, collection, setDoc, doc } from "firebase/firestore";
+import {
+  addDoc,
+  getDocs,
+  collection,
+  setDoc,
+  doc,
+  where,
+  query,
+} from "firebase/firestore";
 
 const initialState = {
   loading: false,
@@ -56,11 +64,12 @@ export const getReservationsByUserEmail = createAsyncThunk(
   async (userEmail, thunkAPI) => {
     try {
       const reservationsCollection = collection(db, "reservations");
-      // const query = query(
-      //   reservationsCollection,
-      //   where("userEmail", "==", userEmail)
-      // );
-      const querySnapshot = await getDocs(query);
+
+      const queryReservations = await query(
+        reservationsCollection,
+        where("userEmail", "==", userEmail)
+      );
+      const querySnapshot = await getDocs(queryReservations);
 
       const reservations = [];
       querySnapshot.forEach((doc) => {
@@ -71,7 +80,7 @@ export const getReservationsByUserEmail = createAsyncThunk(
         };
         reservations.push(reservation);
       });
-
+      console.log("Reservation list; ", userEmail);
       return reservations;
     } catch (error) {
       console.error("Error getting reservations:", error);
