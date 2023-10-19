@@ -20,7 +20,7 @@ export default function Welcome() {
     const unsubscribe = onAuthStateChanged(authorisation, (authUser) => {
       if (authUser) {
         // User is signed in.
-        //console.log("index.js line 23 authUser: ", authUser);
+        console.log("index.js line 23 authUser: ", authUser);
         dispatch(setIsLoggedIn(true));
         dispatch(setUserEmail(authUser.email));
         nav.push("mainFlow");

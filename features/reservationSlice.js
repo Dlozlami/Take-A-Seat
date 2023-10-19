@@ -62,10 +62,11 @@ export const addReservation = createAsyncThunk(
 export const getReservationsByUserEmail = createAsyncThunk(
   "reservation/getReservationsByUserEmail",
   async (userEmail, thunkAPI) => {
+    console.log("reservationsSlice.js line 65 userEmail: ", userEmail);
     try {
       const reservationsCollection = collection(db, "reservations");
 
-      const queryReservations = await query(
+      const queryReservations = query(
         reservationsCollection,
         where("userEmail", "==", userEmail)
       );
@@ -80,7 +81,7 @@ export const getReservationsByUserEmail = createAsyncThunk(
         };
         reservations.push(reservation);
       });
-      console.log("Reservation list; ", userEmail);
+      //console.log("Reservation list: ", reservations);
       return reservations;
     } catch (error) {
       console.error("Error getting reservations:", error);
