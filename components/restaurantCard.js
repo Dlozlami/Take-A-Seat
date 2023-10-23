@@ -21,7 +21,7 @@ import NumberInput from "./numberInput";
 import { addReservation } from "../features/reservationSlice";
 
 export default function RestaurantCard({ restaurant }) {
-  const { userEmail } = useSelector((store) => store.login);
+  const { userEmail, loggedUser } = useSelector((store) => store.login);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = React.useState(false);
@@ -82,12 +82,16 @@ export default function RestaurantCard({ restaurant }) {
 
   const handleBookNow = () => {
     const today = new Date();
+    date.setMinutes(0, 0, 0);
     const reservationData = {
       restaurantID: restaurant.id,
+      fullname: loggedUser.name,
       userEmail: userEmail,
+      phone: loggedUser.phone,
       reservationDate: date.getTime(),
       reservationMade: today.getTime(),
       guests: guests,
+      arrived: false,
     };
     dispatch(addReservation(reservationData));
   };
@@ -156,8 +160,14 @@ export default function RestaurantCard({ restaurant }) {
               </View>
             </View>
             <View style={{ padding: 20 }}>
-              <View style={{ display: "flex", flexDirection: "column" }}>
-                <Text>How many people? </Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginBottom: 5,
+                }}
+              >
+                <Text>How many people?</Text>
                 <NumberInput
                   min={1}
                   max={100}
@@ -240,6 +250,7 @@ export default function RestaurantCard({ restaurant }) {
                       name="calendar-month"
                       size={24}
                       color="black"
+                      style={{ marginRight: 10 }}
                     />
                     <Text>{date.toDateString()}</Text>
                   </TouchableOpacity>
@@ -253,6 +264,7 @@ export default function RestaurantCard({ restaurant }) {
                       name="clock-time-four-outline"
                       size={24}
                       color="black"
+                      style={{ marginRight: 10 }}
                     />
                     <Text
                       style={{
@@ -266,7 +278,10 @@ export default function RestaurantCard({ restaurant }) {
                   </TouchableOpacity>
                 </>
               )}
-
+              <Text style={{ color: "red" }}>
+                Please note all booking times will be converted to o'clock e.g.
+                if you book for 15:14 it will be saved on our system as 15:00.
+              </Text>
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"

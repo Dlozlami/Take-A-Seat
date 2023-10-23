@@ -11,6 +11,27 @@ const initialState = {
   itemsLength: 0,
 };
 
+const restaurantSlice = createSlice({
+  name: "restaurant",
+  initialState,
+  reducers: {
+    addItemToList(state, action) {},
+
+    removeItemFromList(state, action) {},
+
+    clearitemsList(state) {
+      state.itemsList = [];
+      state.itemsLength = state.itemsList.length;
+      updateSubtotalAndTotal(state);
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getRestaurants.fulfilled, (state, action) => {
+      state.restaurantsList = action.payload; // Update the state with the fetched lists
+    });
+  },
+});
+
 export const addRestaurant = createAsyncThunk(
   "restaurant/addRestaurant",
   async (restaurantData, thunkAPI) => {
@@ -54,26 +75,32 @@ export const getRestaurants = createAsyncThunk(
   }
 );
 
-const restaurantSlice = createSlice({
-  name: "restaurant",
-  initialState,
-  reducers: {
-    addItemToList(state, action) {},
 
-    removeItemFromList(state, action) {},
+export const getRestaurantByID = createAsyncThunk(
+  "restaurant/getRestaurants",
+  async (_, thunkAPI) => {
+    try {
+      const restaurantsCollection = collection(db, "restaurants");
+      const querySnapshot = await getDocs(restaurantsCollection);
 
-    clearitemsList(state) {
-      state.itemsList = [];
-      state.itemsLength = state.itemsList.length;
-      updateSubtotalAndTotal(state);
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(getRestaurants.fulfilled, (state, action) => {
-      state.restaurantsList = action.payload; // Update the state with the fetched lists
-    });
-  },
-});
+      const restaurants = [];
+      querySnapshot.forEach((doc) => {
+        const restaurantData = doc.data();
+        const restaurant = {
+          id: doc.id, // Extracting the ID
+          ...restaurantData, // Rest of the data
+        };
+        //console.log("restaurantSlice LINE 41 restaurant: ", restaurant);
+        restaurants.push(restaurant);
+      });
+
+      return restaurants;
+    } catch (error) {
+      console.error("Error getting restaurants:", error);
+      throw error;
+    }
+  }
+);
 
 export const { addItemToList, removeItemFromList, clearitemsList } =
   restaurantSlice.actions;

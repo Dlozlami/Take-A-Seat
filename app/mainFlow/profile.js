@@ -20,7 +20,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { authorisation } from "../../firebaseConfig";
 
 export default function Profile() {
-  const { isLoggedIn } = useSelector((store) => store.login);
+  const { isLoggedIn, loggedUser } = useSelector((store) => store.login);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const nav = useNavigation();
@@ -61,18 +61,24 @@ export default function Profile() {
             }}
           >
             <Text style={{ ...styles.subtitle, color: "white" }}>
-              Welcome, !
+              Welcome, {loggedUser.name}
             </Text>
             <Text style={{ color: "white" }}>This is your dashboard.</Text>
           </View>
           <View style={{ padding: 10 }}>
             <CTAButton
-              title="home"
+              title="Home"
               onPress={() => nav.push("mainFlow")}
               variant="primary"
             />
           </View>
-
+          <View style={{ padding: 10 }}>
+            <CTAButton
+              title="Edit Profile"
+              onPress={() => nav.push("mainFlow")}
+              variant="primary"
+            />
+          </View>
           <View style={{ padding: 10 }}>
             <CTAButton
               title="Log out"

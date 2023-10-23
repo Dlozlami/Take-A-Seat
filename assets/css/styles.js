@@ -156,5 +156,6 @@ export const styles = {
     marginBottom: 10,
     display: "flex",
     flexDirection: "row",
+    alignItems:"center",
   },
 };
