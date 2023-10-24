@@ -8,6 +8,7 @@ const initialState = {
   loading: false,
   error: null,
   restaurantsList: [],
+  myRestaurants:[],
   itemsLength: 0,
 };
 
@@ -26,8 +27,12 @@ const restaurantSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getRestaurants.fulfilled, (state, action) => {
+    builder
+    .addCase(getRestaurants.fulfilled, (state, action) => {
       state.restaurantsList = action.payload; // Update the state with the fetched lists
+    })
+    .addCase(getRestaurantsByOwner.fulfilled, (state, action) => {
+      state.myRestaurants = action.payload; // Update the state with the fetched lists
     });
   },
 });
@@ -76,12 +81,47 @@ export const getRestaurants = createAsyncThunk(
 );
 
 
+
 export const getRestaurantByID = createAsyncThunk(
-  "restaurant/getRestaurants",
-  async (_, thunkAPI) => {
+  "restaurant/getRestaurantByID",
+  async (restaurantID, thunkAPI) => {
+    console.log("restaurantsSlice.js line 83 restaurantID: ", restaurantID);
+    try {
+
+      const restaurantsCollection = doc(db, "restaurants", restaurantID);
+
+      const querySnapshot = await getDocs(restaurantsCollection);
+
+      const restaurants = [];
+      querySnapshot.forEach((doc) => {
+        const restaurantData = doc.data();
+        const restaurant = {
+          id: doc.id, // Extracting the ID
+          ...restaurantData, // Rest of the data
+        };
+        restaurants.push(restaurant);
+      });
+      //console.log("Reservation list: ", restaurants);
+      restaurants.sort((a, b) => a.restaurantDate - b.restaurantDate);
+      return restaurants;
+    } catch (error) {
+      console.error("Error getting restaurants:", error);
+      throw error;
+    }
+  }
+);
+
+export const getRestaurantsByOwner = createAsyncThunk(
+  "restaurant/getRestaurantsByOwner",
+  async (ownerEmail, thunkAPI) => {
     try {
       const restaurantsCollection = collection(db, "restaurants");
-      const querySnapshot = await getDocs(restaurantsCollection);
+
+      const queryReservations = query(
+        restaurantsCollection,
+        where("owner", "==", ownerEmail)
+      );
+      const querySnapshot = await getDocs(queryReservations);
 
       const restaurants = [];
       querySnapshot.forEach((doc) => {

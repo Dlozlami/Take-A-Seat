@@ -33,9 +33,8 @@ export default function RestaurantCard({ restaurant }) {
   const onConfirm = React.useCallback(
     ({ hours, minutes }) => {
       setVisible(false);
-      date.setHours(hours,0,0);
+      date.setHours(hours, 0, 0);
       console.log({ hours, minutes });
-      
     },
     [setVisible]
   );
@@ -56,7 +55,7 @@ export default function RestaurantCard({ restaurant }) {
   const [guests, setGuests] = useState(1);
   const [openModal, setOpenodal] = useState(false);
 
-  console.log("RestaurantCard line 58 rendered: ",restaurant.name);
+  console.log("RestaurantCard line 58 rendered: ", restaurant.name);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -85,7 +84,7 @@ export default function RestaurantCard({ restaurant }) {
     const today = new Date();
     date.setMinutes(0, 0, 0);
 
-    console.log("RestaurantCard line 87 loggedUser.name: ",userEmail);
+    console.log("RestaurantCard line 87 loggedUser.name: ", userEmail);
     const reservationData = {
       restaurantID: restaurant.id,
       fullname: loggedUser.name,
@@ -145,8 +144,7 @@ export default function RestaurantCard({ restaurant }) {
             <View
               style={{
                 width: "100%",
-                borderBottomWidth: 1,
-                borderBottomColor: "gray",
+                backgroundColor: "#335930",
               }}
             >
               {/* <Image
@@ -155,11 +153,21 @@ export default function RestaurantCard({ restaurant }) {
                 resizeMode="contain"
               /> */}
               <View style={styles.details}>
-                <Text style={styles.name}>{restaurant.name}</Text>
-                <Text style={styles.description}>{restaurant.description}</Text>
-                <Text style={styles.location}>{restaurant.location}</Text>
-                <Text style={styles.contact}>{restaurant.phone}</Text>
-                <Text style={styles.contact}>{restaurant.email}</Text>
+                <Text style={{ ...styles.name, color: "white" }}>
+                  {restaurant.name}
+                </Text>
+                <Text style={{ ...styles.description, color: "white" }}>
+                  {restaurant.description}
+                </Text>
+                <Text style={{ ...styles.location, color: "white" }}>
+                  {restaurant.location}
+                </Text>
+                <Text style={{ ...styles.contact, color: "white" }}>
+                  {restaurant.phone}
+                </Text>
+                <Text style={{ ...styles.contact, color: "white" }}>
+                  {restaurant.email}
+                </Text>
               </View>
             </View>
             <View style={{ padding: 20 }}>
@@ -178,7 +186,6 @@ export default function RestaurantCard({ restaurant }) {
                   setValue={setGuests}
                 />
               </View>
-
               {Platform.OS === "web" ? (
                 <>
                   <View
@@ -297,12 +304,10 @@ export default function RestaurantCard({ restaurant }) {
               )}
             </View>
             <View
-              style={{ padding: 20, display: "flex", flexDirection: "row" }}
+              style={{ padding: 20, display: "flex", flexDirection: "row",borderTopWidth: 1,
+              borderTopColor: "#335930", }}
             >
-              <TouchableOpacity
-                style={styles.okButton}
-                onPress={() => handleBookNow()}
-              >
+              <TouchableOpacity style={styles.okButton} onPress={handleBookNow}>
                 <Text style={styles.okButtonText}>Book Now</Text>
               </TouchableOpacity>
               <TouchableOpacity

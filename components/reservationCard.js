@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  MaterialCommunityIcons,
+  AntDesign,
+} from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   deleteReservation,
@@ -50,6 +54,7 @@ const ReservationCard = ({ reservation }) => {
   );
 
   const [newGuests, setNewGuests] = useState(reservation.guests);
+
   const [openModal, setOpenodal] = useState(false);
 
   console.log("RestaurantCard line 58 rendered: ", myRestaurant.name);
@@ -92,8 +97,26 @@ const ReservationCard = ({ reservation }) => {
       arrived: false,
     };
     console.log("RestaurantCard line 97 reservationData: ", reservationData);
-    dispatch(updateReservation([reservation.id,reservationData]));
-    setOpenodal(false)
+    dispatch(updateReservation([reservation.id, reservationData]));
+    setOpenodal(false);
+  };
+
+  const handleArrived = () => {
+    const today = new Date();
+    date.setMinutes(0, 0, 0);
+
+    const reservationData = {
+      restaurantID: reservation.restaurantID,
+      fullname: reservation.fullname,
+      userEmail: reservation.userEmail,
+      phone: reservation.phone,
+      reservationDate: date.getTime(),
+      reservationMade: reservation.reservationMade,
+      guests: newGuests,
+      arrived: reservation.arrived ? false : true,
+    };
+    console.log("RestaurantCard line 97 reservationData: ", reservationData);
+    dispatch(updateReservation([reservation.id, reservationData]));
   };
 
   const handleDelete = () => {
@@ -103,13 +126,18 @@ const ReservationCard = ({ reservation }) => {
   return (
     <View style={localStyles.card}>
       <View style={{ padding: 10 }}>
-        <Text style={localStyles.title}>{reservation.fullname}</Text>
-        <Text style={localStyles.value}>{reservation.userEmail}</Text>
+        <View
+          style={{
+            borderBottomColor: "#335930",
+            borderBottomWidth: 1,
+          }}
+        >
+          <Text style={localStyles.title}>{reservation.fullname}</Text>
+          <Text style={localStyles.value}>{reservation.userEmail}</Text>
+        </View>
 
         <View
           style={{
-            borderTopColor: "gray",
-            borderTopWidth: 1,
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
@@ -172,14 +200,37 @@ const ReservationCard = ({ reservation }) => {
         </View>
       </View>
 
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          backgroundColor: reservation.arrived ? "#3dc67d" : "#f3572a",
+          padding: 10,
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View style={{}}>
+          <Text style={{ fontSize: 25, color: "white" }}>Arrived</Text>
+        </View>
+        <View>
+          <TouchableOpacity onPress={handleArrived}>
+            {reservation.arrived ? (
+              <AntDesign name="checksquareo" size={24} color="white" />
+            ) : (
+              <AntDesign name="closesquareo" size={24} color="white" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View
               style={{
                 width: "100%",
-                borderBottomWidth: 1,
-                borderBottomColor: "gray",
+                backgroundColor: "#335930",
               }}
             >
               {/* <Image
@@ -188,13 +239,21 @@ const ReservationCard = ({ reservation }) => {
                 resizeMode="contain"
               /> */}
               <View style={styles.details}>
-                <Text style={styles.name}>{myRestaurant.name}</Text>
-                <Text style={styles.description}>
+                <Text style={{ ...styles.name, color: "white" }}>
+                  {myRestaurant.name}
+                </Text>
+                <Text style={{ ...styles.description, color: "white" }}>
                   {myRestaurant.description}
                 </Text>
-                <Text style={styles.location}>{myRestaurant.location}</Text>
-                <Text style={styles.contact}>{myRestaurant.phone}</Text>
-                <Text style={styles.contact}>{myRestaurant.email}</Text>
+                <Text style={{ ...styles.location, color: "white" }}>
+                  {myRestaurant.location}
+                </Text>
+                <Text style={{ ...styles.contact, color: "white" }}>
+                  {myRestaurant.phone}
+                </Text>
+                <Text style={{ ...styles.contact, color: "white" }}>
+                  {myRestaurant.email}
+                </Text>
               </View>
             </View>
             <View style={{ padding: 20 }}>
@@ -331,12 +390,15 @@ const ReservationCard = ({ reservation }) => {
               )}
             </View>
             <View
-              style={{ padding: 20, display: "flex", flexDirection: "row" }}
+              style={{
+                padding: 20,
+                display: "flex",
+                flexDirection: "row",
+                borderTopWidth: 1,
+                borderTopColor: "#335930",
+              }}
             >
-              <TouchableOpacity
-                style={styles.okButton}
-                onPress={handleUpdate}
-              >
+              <TouchableOpacity style={styles.okButton} onPress={handleUpdate}>
                 <Text style={styles.okButtonText}>Update Reservation</Text>
               </TouchableOpacity>
               <TouchableOpacity
