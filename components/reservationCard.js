@@ -1,43 +1,110 @@
-import React, { useState 
-} from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import {deleteReservation} from "../features/reservationSlice";
+import {
+  deleteReservation,
+  updateReservation,
+} from "../features/reservationSlice";
 import { styles } from "../assets/css/styles";
 import NumberInput from "./numberInput";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { DatePickerModal } from "react-native-paper-dates";
+import { TimePickerModal } from "react-native-paper-dates";
 
 const ReservationCard = ({ reservation }) => {
   const dispatch = useDispatch();
-  const {
-    id,
-    fullname,
-    phone,
-    userEmail,
-    reservationMade,
-    reservationDate,
-    restaurantID,
-    guests,
-  } = reservation;
+
   const [visible, setVisible] = useState(false);
   const { restaurantsList } = useSelector((store) => store.restaurant);
   const myRestaurant = restaurantsList.find(
-    (restaurant) => restaurant.id === restaurantID
+    (restaurant) => restaurant.id === reservation.restaurantID
   );
-  console.log("reservationCard.js line 13 reservation: ", reservation);
+  console.log("reservationCard.js line 29 reservation: ", reservation);
+
+  const onDismiss = React.useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
+
+  const onConfirm = React.useCallback(
+    ({ hours, minutes }) => {
+      setVisible(false);
+      date.setHours(hours, 0, 0);
+      console.log({ hours, minutes });
+    },
+    [setVisible]
+  );
+  const [open, setOpen] = React.useState(false);
+
+  const onDismissSingle = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirmSingle = React.useCallback(
+    (params) => {
+      setOpen(false);
+      setDate(params.date);
+    },
+    [setOpen, setDate]
+  );
+
+  const [newGuests, setNewGuests] = useState(reservation.guests);
+  const [openModal, setOpenodal] = useState(false);
+
+  console.log("RestaurantCard line 58 rendered: ", myRestaurant.name);
+  const [date, setDate] = useState(new Date(reservation.reservationDate));
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+    console.log("User email: ", userEmail);
+  };
+
+  const handleUpdate = () => {
+    const today = new Date();
+    date.setMinutes(0, 0, 0);
+
+    const reservationData = {
+      restaurantID: reservation.restaurantID,
+      fullname: reservation.fullname,
+      userEmail: reservation.userEmail,
+      phone: reservation.phone,
+      reservationDate: date.getTime(),
+      reservationMade: reservation.reservationMade,
+      guests: newGuests,
+      arrived: false,
+    };
+    console.log("RestaurantCard line 97 reservationData: ", reservationData);
+    dispatch(updateReservation([reservation.id,reservationData]));
+    setOpenodal(false)
+  };
 
   const handleDelete = () => {
     dispatch(deleteReservation(reservation.id));
   };
-  const handleEdit = () => {};
 
   return (
     <View style={localStyles.card}>
       <View style={{ padding: 10 }}>
-        <Text style={localStyles.title}>{fullname}</Text>
-        <Text style={localStyles.value}>{userEmail}</Text>
+        <Text style={localStyles.title}>{reservation.fullname}</Text>
+        <Text style={localStyles.value}>{reservation.userEmail}</Text>
 
         <View
           style={{
@@ -53,24 +120,24 @@ const ReservationCard = ({ reservation }) => {
             <View style={{ display: "flex", flexDirection: "row" }}>
               <Text style={localStyles.label}>Date: </Text>
               <Text style={localStyles.value}>
-                {new Date(reservationDate).toDateString()}
+                {new Date(reservation.reservationDate).toDateString()}
               </Text>
             </View>
 
             <View style={{ display: "flex", flexDirection: "row" }}>
               <Text style={localStyles.label}>Time: </Text>
               <Text style={localStyles.value}>
-                {new Date(reservationDate).toTimeString()}
+                {new Date(reservation.reservationDate).toTimeString()}
               </Text>
             </View>
 
             <View style={{ display: "flex", flexDirection: "row" }}>
               <Text style={localStyles.label}>Guests: </Text>
-              <Text style={localStyles.value}>{guests}</Text>
+              <Text style={localStyles.value}>{newGuests}</Text>
             </View>
           </View>
           <View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setOpenodal(true)}>
               <FontAwesome name="edit" size={24} color="#335930" />
             </TouchableOpacity>
           </View>
@@ -104,9 +171,8 @@ const ReservationCard = ({ reservation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      
 
-      <Modal visible={visible} transparent>
+      <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View
@@ -123,7 +189,9 @@ const ReservationCard = ({ reservation }) => {
               /> */}
               <View style={styles.details}>
                 <Text style={styles.name}>{myRestaurant.name}</Text>
-                <Text style={styles.description}>{myRestaurant.description}</Text>
+                <Text style={styles.description}>
+                  {myRestaurant.description}
+                </Text>
                 <Text style={styles.location}>{myRestaurant.location}</Text>
                 <Text style={styles.contact}>{myRestaurant.phone}</Text>
                 <Text style={styles.contact}>{myRestaurant.email}</Text>
@@ -141,8 +209,8 @@ const ReservationCard = ({ reservation }) => {
                 <NumberInput
                   min={1}
                   max={100}
-                  value={guests}
-                  setValue={setGuests}
+                  value={newGuests}
+                  setValue={setNewGuests}
                 />
               </View>
               {Platform.OS === "web" ? (
@@ -164,10 +232,9 @@ const ReservationCard = ({ reservation }) => {
                           name="clock-time-four-outline"
                           size={24}
                           color="black"
+                          style={{ marginRight: 10 }}
                         />
-                        {date
-                          ? "Pick time"
-                          : date && date.toTimeString().split(" ")[0]}
+                        {date.toTimeString().split(" ")[0]}
                       </Text>
                     </TouchableOpacity>
                     <TimePickerModal
@@ -195,8 +262,9 @@ const ReservationCard = ({ reservation }) => {
                           name="calendar-month"
                           size={24}
                           color="black"
+                          style={{ marginRight: 10 }}
                         />
-                        Pick date
+                        {date.toDateString()}
                       </Text>
                     </TouchableOpacity>
                     <DatePickerModal
@@ -267,9 +335,9 @@ const ReservationCard = ({ reservation }) => {
             >
               <TouchableOpacity
                 style={styles.okButton}
-                onPress={() => handleBookNow()}
+                onPress={handleUpdate}
               >
-                <Text style={styles.okButtonText}>Book Now</Text>
+                <Text style={styles.okButtonText}>Update Reservation</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.okButton}

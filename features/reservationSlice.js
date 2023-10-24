@@ -2,7 +2,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authorisation, db } from "../firebaseConfig";
 import { Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import {
   addDoc,
   getDocs,
@@ -11,7 +10,8 @@ import {
   doc,
   where,
   query,
-  deleteDoc
+  deleteDoc,
+  updateDoc
 } from "firebase/firestore";
 
 const initialState = {
@@ -60,8 +60,6 @@ export const addReservation = createAsyncThunk(
       Alert.alert("Success", "The reservation has been added successfully.");
       alert("The reservation has been added successfully.");
       console.log("New reservation document ID:", newReservation.id);
-      const nav = useNavigation();
-      nav.push("mainFlow");
     } catch (error) {
       console.error("Error creating reservation:", error);
     }
@@ -139,6 +137,7 @@ export const deleteReservation = createAsyncThunk(
     try {
         deleteDoc(doc(db,"reservations",reservationID));
         Alert.alert("Success", "The reservation has been deleted successfully.");
+        alert("The reservation has been deleted successfully.");
         console.log('Deleted: ', reservationID);
     } catch (error) {
       console.error("Error deleting reservation:", error);
@@ -151,14 +150,15 @@ export const deleteReservation = createAsyncThunk(
 
 export const updateReservation = createAsyncThunk(
   "reservation/updateReservation",
-  async (reservationID, thunkAPI) => {
-    console.log("reservationsSlice.js line 138 reservationID: ", reservationID);
+  async (reservationData, thunkAPI) => {
+    console.log("reservationsSlice.js line 153 reservationID: ", reservationData[0]);
     try {
-        deleteDoc(doc(db,"reservations",reservationID));
-        Alert.alert("Success", "The reservation has been deleted successfully.");
-        console.log('Deleted: ', reservationID);
+        updateDoc(doc(db,"reservations",reservationData[0]),reservationData[1]);
+        Alert.alert("Success", "The reservation has been updated successfully.");
+        alert("The reservation has been updated successfully.");
+        console.log('updated: ', reservationData[0]);
     } catch (error) {
-      console.error("Error deleting reservation:", error);
+      console.error("Error updating reservation:", error);
       throw error;
     }
   }

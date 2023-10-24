@@ -26,9 +26,9 @@ const NumberInput = ({ min, max, value, setValue }) => {
   return (
     <View
       style={{
+        display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center",
       }}
     >
       <TouchableOpacity onPress={handleDecrement} style={{ marginRight: 10 }}>
@@ -39,12 +39,7 @@ const NumberInput = ({ min, max, value, setValue }) => {
           borderRadius: 10,
           padding: 10,
           fontSize: 16,
-          flex: 1,
           backgroundColor: "#5df4a0",
-          width: "5vw",
-          display: "flex",
-          alignContent: "center",
-          justifyContent: "center",
         }}
         keyboardType="numeric"
         onChangeText={handleInputChange}

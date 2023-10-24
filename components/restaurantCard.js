@@ -12,18 +12,18 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { TimePickerModal } from "react-native-paper-dates";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "../assets/css/styles";
 import { DatePickerModal } from "react-native-paper-dates";
+import { TimePickerModal } from "react-native-paper-dates";
 import NumberInput from "./numberInput";
 import { addReservation } from "../features/reservationSlice";
 
 export default function RestaurantCard({ restaurant }) {
   const { userEmail, loggedUser } = useSelector((store) => store.login);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+
   const [visible, setVisible] = React.useState(false);
 
   const onDismiss = React.useCallback(() => {
@@ -33,7 +33,9 @@ export default function RestaurantCard({ restaurant }) {
   const onConfirm = React.useCallback(
     ({ hours, minutes }) => {
       setVisible(false);
+      date.setHours(hours,0,0);
       console.log({ hours, minutes });
+      
     },
     [setVisible]
   );
@@ -53,9 +55,8 @@ export default function RestaurantCard({ restaurant }) {
 
   const [guests, setGuests] = useState(1);
   const [openModal, setOpenodal] = useState(false);
-  const nav = useNavigation();
-  const [startDate, setStartDate] = useState(new Date());
-  console.log("Render rest card: ");
+
+  console.log("RestaurantCard line 58 rendered: ",restaurant.name);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -83,6 +84,8 @@ export default function RestaurantCard({ restaurant }) {
   const handleBookNow = () => {
     const today = new Date();
     date.setMinutes(0, 0, 0);
+
+    console.log("RestaurantCard line 87 loggedUser.name: ",userEmail);
     const reservationData = {
       restaurantID: restaurant.id,
       fullname: loggedUser.name,
@@ -175,6 +178,7 @@ export default function RestaurantCard({ restaurant }) {
                   setValue={setGuests}
                 />
               </View>
+
               {Platform.OS === "web" ? (
                 <>
                   <View
@@ -194,10 +198,9 @@ export default function RestaurantCard({ restaurant }) {
                           name="clock-time-four-outline"
                           size={24}
                           color="black"
+                          style={{ marginRight: 10 }}
                         />
-                        {date
-                          ? "Pick time"
-                          : date && date.toTimeString().split(" ")[0]}
+                        {date.toTimeString().split(" ")[0]}
                       </Text>
                     </TouchableOpacity>
                     <TimePickerModal
@@ -225,8 +228,9 @@ export default function RestaurantCard({ restaurant }) {
                           name="calendar-month"
                           size={24}
                           color="black"
+                          style={{ marginRight: 10 }}
                         />
-                        Pick date
+                        {date.toDateString()}
                       </Text>
                     </TouchableOpacity>
                     <DatePickerModal

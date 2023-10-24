@@ -37,6 +37,7 @@ const loginSlice = createSlice({
       })
       .addCase(getUserByEmail.fulfilled, (state, action) => {
         state.loggedUser = action.payload;
+        state.loggedUser.password = "##########"
       });
   },
 });
