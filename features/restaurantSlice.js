@@ -101,7 +101,7 @@ export const getRestaurantByID = createAsyncThunk(
         };
         restaurants.push(restaurant);
       });
-      //console.log("Reservation list: ", restaurants);
+      //console.log("Restaurant list: ", restaurants);
       restaurants.sort((a, b) => a.restaurantDate - b.restaurantDate);
       return restaurants;
     } catch (error) {
@@ -117,11 +117,11 @@ export const getRestaurantsByOwner = createAsyncThunk(
     try {
       const restaurantsCollection = collection(db, "restaurants");
 
-      const queryReservations = query(
+      const queryRestaurants = query(
         restaurantsCollection,
         where("owner", "==", ownerEmail)
       );
-      const querySnapshot = await getDocs(queryReservations);
+      const querySnapshot = await getDocs(queryRestaurants);
 
       const restaurants = [];
       querySnapshot.forEach((doc) => {
@@ -137,6 +137,39 @@ export const getRestaurantsByOwner = createAsyncThunk(
       return restaurants;
     } catch (error) {
       console.error("Error getting restaurants:", error);
+      throw error;
+    }
+  }
+);
+
+
+export const deleteRestaurant = createAsyncThunk(
+  "restaurant/deleteRestaurant",
+  async (restaurantID, thunkAPI) => {
+    console.log("restaurantsSlice.js line 138 restaurantID: ", restaurantID);
+    try {
+        deleteDoc(doc(db,"restaurants",restaurantID));
+        Alert.alert("Success", "The restaurant has been deleted successfully.");
+        alert("The restaurant has been deleted successfully.");
+        console.log('Deleted: ', restaurantID);
+    } catch (error) {
+      console.error("Error deleting restaurant:", error);
+      throw error;
+    }
+  }
+);
+
+export const updateRestaurant = createAsyncThunk(
+  "restaurant/updateRestaurant",
+  async (restaurantData, thunkAPI) => {
+    console.log("restaurantsSlice.js line 153 restaurantID: ", restaurantData[0]);
+    try {
+        updateDoc(doc(db,"restaurants",restaurantData[0]),restaurantData[1]);
+        Alert.alert("Success", "The restaurant has been updated successfully.");
+        alert("The restaurant has been updated successfully.");
+        console.log('updated: ', restaurantData[0]);
+    } catch (error) {
+      console.error("Error updating restaurant:", error);
       throw error;
     }
   }

@@ -134,7 +134,7 @@ export default function EditRestaurant({ route, navigation }) {
             </View>
             <View style={{ padding: 10 }}>
               <CTAButton
-                title="save changes"
+                title="Save changes"
                 onPress={handleAddRestaurant}
                 variant="primary"
               />

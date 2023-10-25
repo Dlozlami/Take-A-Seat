@@ -18,7 +18,7 @@ import { styles } from "../assets/css/styles";
 import { DatePickerModal } from "react-native-paper-dates";
 import { TimePickerModal } from "react-native-paper-dates";
 import NumberInput from "./numberInput";
-import { addReservation } from "../features/reservationSlice";
+import { addReservation, deleteRestaurant } from "../features/reservationSlice";
 
 export default function RestaurantCard({ restaurant }) {
   const { userEmail, loggedUser } = useSelector((store) => store.login);
@@ -96,33 +96,48 @@ export default function RestaurantCard({ restaurant }) {
       arrived: false,
     };
     dispatch(addReservation(reservationData));
-    setOpenodal(false)
+    setOpenodal(false);
+  };
 
+  const handleDelete = () => {
+    dispatch(deleteRestaurant(restaurant.id));
   };
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => {console.log("restaurant.restaurantID: ",restaurant.id);loggedUser.admin?nav.push("editRestaurant",{"restaurantID":restaurant.id}):
-          setOpenodal(true);
-          //console.log("restCard line 12 openModal: ", openModal);
-        }}
+      <View
+        style={{...styles.card,display: "flex", flexDirection: "row" }}
       >
         {/* <Image
           source={restaurant.imageURL}
           style={styles.image}
           resizeMode="cover"
         /> */}
-        <View style={{ display: "flex", flexDirection: "row" }}>
-          <View style={{ ...styles.details, width: "80%" }}>
-            <Text style={{...styles.name,color:"#335930"}}>{restaurant.name}</Text>
+        <TouchableOpacity onPress={() => {
+          console.log("restaurant.restaurantID: ", restaurant.id);
+          loggedUser.admin
+            ? nav.push("editRestaurant", { restaurantID: restaurant.id })
+            : setOpenodal(true);
+          //console.log("restCard line 12 openModal: ", openModal);
+        }} style={{width: "80%" }}>
+          <View style={{ ...styles.details }}>
+            <Text style={{ ...styles.name, color: "#335930" }}>
+              {restaurant.name}
+            </Text>
 
-            <Text style={{...styles.location,color:"#335930"}}>{restaurant.location}</Text>
-            <Text style={{...styles.contact,color:"#335930"}}>{restaurant.phone}</Text>
-            <Text style={{...styles.ratings}}>Ratings: {restaurant.ratings}</Text>
+            <Text style={{ ...styles.location, color: "#335930" }}>
+              {restaurant.location}
+            </Text>
+            <Text style={{ ...styles.contact, color: "#335930" }}>
+              {restaurant.phone}
+            </Text>
+            <Text style={{ ...styles.ratings }}>
+              Ratings: {restaurant.ratings}
+            </Text>
           </View>
-          <View
+          </TouchableOpacity>
+          
+          <TouchableOpacity
             style={{
               display: "flex",
               justifyContent: "center",
@@ -130,22 +145,27 @@ export default function RestaurantCard({ restaurant }) {
               alignItems: "center",
               backgroundColor: "#335930",
             }}
+
+            onPress={()=>{
+              loggedUser.admin?handleDelete:null;
+            }}
           >
+            {
+              loggedUser.admin?<MaterialCommunityIcons name="trash-can-outline" size={24} color="white" />:
             <MaterialCommunityIcons
               name="table-chair"
               size={24}
               color="white"
-            />
-          </View>
-        </View>
-      </TouchableOpacity>
+            />}
+           </TouchableOpacity>    
+      </View>
+
 
       <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View
               style={{
-                
                 backgroundColor: "#335930",
               }}
             >
@@ -306,8 +326,13 @@ export default function RestaurantCard({ restaurant }) {
               )}
             </View>
             <View
-              style={{ padding: 20, display: "flex", flexDirection: "row",borderTopWidth: 1,
-              borderTopColor: "#335930", }}
+              style={{
+                padding: 20,
+                display: "flex",
+                flexDirection: "row",
+                borderTopWidth: 1,
+                borderTopColor: "#335930",
+              }}
             >
               <TouchableOpacity style={styles.okButton} onPress={handleBookNow}>
                 <Text style={styles.okButtonText}>Book Now</Text>
