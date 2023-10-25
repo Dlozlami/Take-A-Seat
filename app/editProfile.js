@@ -7,44 +7,23 @@ import { addDoc, getDoc, collection, setDoc, doc } from "firebase/firestore";
 const backgroundImage = require("../assets/images/duotone.jpg");
 import { authorisation, db } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function SignUp() {
-  const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
+export default function EditProfile() {
+    const { loggedUser } = useSelector((store) => store.login);
+  const [name, setName] = useState(loggedUser.name);
+  const [email, setEmail] = useState(loggedUser.email);
   const [password, setPassword] = useState(null);
-  const [phone, setPhone] = useState(null);
+  const [phone, setPhone] = useState(loggedUser.phone);
   const nav = useNavigation();
 
-  const goToSignUp = async () => {
-    if (email && password && name) {
-      const usersCollection = collection(db, "users");
-
-      try {
-        const response = await createUserWithEmailAndPassword(
-          authorisation,
-          email,
-          password
-        );
-        const newUserDocRef = await addDoc(usersCollection, {
-          name: name,
-          email: email,
-          password: password,
-          phone: phone,
-        });
-        Alert.alert("Success", "The user has been added successfully.");
-        console.log("New user document ID:", newUserDocRef.id);
-      } catch (error) {
-        console.error("Error creating user:", error);
-      }
+  const updateProfile = async () => {
 
       setName(null);
       setEmail(null);
       setPassword(null);
       setPhone(null);
-      nav.push("login");
-    } else {
-      Alert.alert("Opps...", "Please fill in all the fields.");
-    }
+      nav.push("profile");
   };
 
   return (
@@ -60,10 +39,9 @@ export default function SignUp() {
               backgroundColor: "#639e79",
             }}
           >
-            <Text style={{ ...styles.subtitle, color: "white" }}>Sign up </Text>
+            <Text style={{ ...styles.subtitle, color: "white" }}>Edit your profile </Text>
             <Text style={{ color: "white" }}>
-              Join us and explore a world of culinary delights. Your table
-              awaits!
+              Make changes to your personal details
             </Text>
           </View>
           <View style={{ padding: 10 }}>
@@ -100,7 +78,7 @@ export default function SignUp() {
             />
           </View>
           <View style={{ padding: 10 }}>
-            <CTAButton title="Sign up" onPress={goToSignUp} variant="primary" />
+            <CTAButton title="Save changes" onPress={goToSignUp} variant="primary" />
           </View>
         </View>
       </View>

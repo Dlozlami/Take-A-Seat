@@ -9,6 +9,7 @@ import MainFlow from "./mainFlow/_layout";
 import RestaurantDetails from "./restaurantDetails";
 import AddRestaurant from "./addRestaurant";
 import EditRestaurant from "./editRestaurant";
+import EditProfile from "./editProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,11 @@ export default function Layout() {
           name="signup"
           component={SignUp}
           options={{ title: "Log in" }}
+        />
+        <Stack.Screen
+          name="editProfile"
+          component={EditProfile}
+          options={{ title: "Profile" }}
         />
         <Stack.Screen
           name="addRestaurant"

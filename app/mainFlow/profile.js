@@ -75,7 +75,7 @@ export default function Profile() {
           <View style={{ padding: 10 }}>
             <CTAButton
               title="Edit Profile"
-              onPress={() => nav.push("mainFlow")}
+              onPress={() => nav.push("editProfile")}
               variant="primary"
             />
           </View>

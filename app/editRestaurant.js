@@ -11,7 +11,7 @@ export default function EditRestaurant({ route, navigation }) {
     const { restaurantID } = route.params;
   const dispatch = useDispatch();
   const nav = useNavigation();
-  const { loggedUser } = useSelector((store) => store.login);
+  
   const { restaurantsList } = useSelector((store) => store.restaurant);
   const myRestaurant = restaurantsList.find(
     (restaurant) => restaurant.id === restaurantID
