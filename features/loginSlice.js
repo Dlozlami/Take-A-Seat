@@ -9,6 +9,8 @@ import {
   doc,
   where,
   query,
+  updateDoc,
+  deleteDoc
 } from "firebase/firestore";
 
 const initialState = {
@@ -121,6 +123,21 @@ export const getAllUsers = createAsyncThunk(
       return users;
     } catch (error) {
       console.error("Error getting users:", error);
+      throw error;
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  "login/updateUser",
+  async (userData, thunkAPI) => {
+    console.log("loginSlice.js line 134 userID: ", userData[0]);
+    try {
+        updateDoc(doc(db,"users",userData[0]),userData[1]);
+        alert("The user has been updated successfully.");
+        console.log('updated user: ', userData[0]);
+    } catch (error) {
+      console.error("Error updating user:", error);
       throw error;
     }
   }

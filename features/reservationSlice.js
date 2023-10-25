@@ -49,7 +49,7 @@ const reservationSlice = createSlice({
 export const addReservation = createAsyncThunk(
   "reservation/addReservation",
   async (reservationData, thunkAPI) => {
-    //console.log("New restaurant adding 12..:");
+    console.log("New restaurant adding :",reservationData);
     const reservationsCollection = collection(db, "reservations");
 
     try {

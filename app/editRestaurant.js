@@ -5,7 +5,7 @@ import { CTAButton } from "../components/CTAButton";
 import { styles } from "../assets/css/styles";
 const backgroundImage = require("../assets/images/duotone.jpg");
 import { useDispatch,useSelector } from "react-redux";
-import { addRestaurant } from "../features/restaurantSlice";
+import {updateRestaurant } from "../features/restaurantSlice";
 
 export default function EditRestaurant({ route, navigation }) {
     const { restaurantID } = route.params;
@@ -25,8 +25,9 @@ export default function EditRestaurant({ route, navigation }) {
   const [phone, setPhone] = useState(myRestaurant.phone);
   const [email, setEmail] = useState(myRestaurant.email);
   const [numberOfTables, setNumberOfTables] = useState(myRestaurant.numberOfTables);
+  const [ratings, setRatings] = useState(myRestaurant.ratings)
 
-  const handleAddRestaurant = async () => {
+  const handleEditRestaurant = async () => {
     if (
       email &&
       imageURL &&
@@ -44,9 +45,9 @@ export default function EditRestaurant({ route, navigation }) {
         phone: phone,
         email: email,
         numberOfTables: numberOfTables,
-        ratings: [0.0],
+        ratings: ratings,
       };
-      dispatch(addRestaurant(newRestaurant));
+      dispatch(updateRestaurant([myRestaurant.id,newRestaurant]));
       setName(null);
       setEmail(null);
       setLocation(null);
@@ -54,6 +55,7 @@ export default function EditRestaurant({ route, navigation }) {
       setImageURL(null);
       setPhone(null);
       setNumberOfTables(null);
+      nav.push("index");
     } else {
       alert("Please fill in all the fields.");
     }
@@ -135,7 +137,7 @@ export default function EditRestaurant({ route, navigation }) {
             <View style={{ padding: 10 }}>
               <CTAButton
                 title="Save changes"
-                onPress={handleAddRestaurant}
+                onPress={handleEditRestaurant}
                 variant="primary"
               />
             </View>

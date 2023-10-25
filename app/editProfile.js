@@ -1,12 +1,12 @@
-import { Alert, ImageBackground, Text, View, TextInput } from "react-native";
+import { ImageBackground, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { CTAButton } from "../components/CTAButton";
 import { styles } from "../assets/css/styles";
-import { addDoc, getDoc, collection, setDoc, doc } from "firebase/firestore";
+import {updateUser} from "../features/loginSlice";
+
 const backgroundImage = require("../assets/images/duotone.jpg");
-import { authorisation, db } from "../firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+
 import { useDispatch, useSelector } from "react-redux";
 
 export default function EditProfile() {
@@ -16,14 +16,26 @@ export default function EditProfile() {
   const [password, setPassword] = useState(null);
   const [phone, setPhone] = useState(loggedUser.phone);
   const nav = useNavigation();
+  const dispatch = useDispatch();
 
   const updateProfile = async () => {
-
+    if(password){
+    const newUserInfo = {
+      name:name,
+      email:email,
+      password:password,
+      phone:phone,
+    }
+      dispatch(updateUser([loggedUser.id,newUserInfo]))
       setName(null);
       setEmail(null);
       setPassword(null);
       setPhone(null);
-      nav.push("profile");
+      nav.push("index");
+  }
+  else{
+    alert("Please fill in all the fields");
+  }
   };
 
   return (
@@ -78,7 +90,7 @@ export default function EditProfile() {
             />
           </View>
           <View style={{ padding: 10 }}>
-            <CTAButton title="Save changes" onPress={goToSignUp} variant="primary" />
+            <CTAButton title="Save changes" onPress={updateProfile} variant="primary" />
           </View>
         </View>
       </View>

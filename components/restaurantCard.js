@@ -55,7 +55,7 @@ export default function RestaurantCard({ restaurant }) {
   const [guests, setGuests] = useState(1);
   const [openModal, setOpenodal] = useState(false);
 
-  console.log("RestaurantCard line 58 rendered: ", restaurant.name);
+  //console.log("RestaurantCard line 58 rendered: ", restaurant.name);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
