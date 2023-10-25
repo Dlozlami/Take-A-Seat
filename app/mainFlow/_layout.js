@@ -8,7 +8,7 @@ import {
 import HomeScreen from "./home";
 import ProfileScreen from "./profile";
 import ListScreen from "./list";
-import AddRestaurant from "./addRestaurant";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -60,9 +60,12 @@ export default function MainFlow() {
             ),
           }}
         />
-        <Tab.Screen
+        
+      </Tab.Navigator>
+      {/* <Tab.Screen
           name="addRestaurant"
           component={AddRestaurant}
+          tabBarShowLabel={true}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused, color, size }) => (
@@ -73,9 +76,7 @@ export default function MainFlow() {
               />
             ),
           }}
-        />
-      </Tab.Navigator>
-      {/* <Tabs
+        /><Tabs
       screenOptions={{
         tabBarShowLabel: false, // Hide tab labels
         activeTintColor: "#d2ff58",

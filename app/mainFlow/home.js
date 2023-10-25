@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  ScrollView,
+  ScrollView,Text
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { styles } from "../../assets/css/styles";
@@ -13,8 +13,10 @@ import { getRestaurants } from "../../features/restaurantSlice";
 import Search from "../../components/search";
 import FilterBTN from "../../components/filterBTN";
 import RestaurantCard from "../../components/restaurantCard";
+import AddRestaurantBTN from "../../components/addRestaurantBTN";
 
 export default function Home() {
+  const {loggedUser } = useSelector((store) => store.login);
   const { restaurantsList } = useSelector((store) => store.restaurant);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -34,9 +36,12 @@ export default function Home() {
       >
         <View style={styles.header}>
           <Search />
+          {loggedUser.admin?
+          <Text style={{fontSize:20,fontWeight:700,paddingVertical:20,color:"#335930"}}>My Restaurants</Text>
+          :
           <ScrollView
             horizontal
-            contentContainerStyle={myStyles.horizonalScroll}
+            contentContainerStyle={myStyles.horizonalScroll} showsHorizontalScrollIndicator={false}
           >
             <FilterBTN title="Sushi" />
             <FilterBTN title="7 colours" />
@@ -46,6 +51,7 @@ export default function Home() {
             <FilterBTN title="Thai" />
             <FilterBTN title="Italian" />
           </ScrollView>
+          }
         </View>
         {/*console.log(restaurantsList)*/}
         <ScrollView contentContainerStyle={myStyles.cardContainer}>
@@ -61,6 +67,7 @@ export default function Home() {
           color="#3498db"
         />
       )}
+      <AddRestaurantBTN />
     </>
   );
 }

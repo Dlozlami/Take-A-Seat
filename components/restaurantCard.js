@@ -23,7 +23,7 @@ import { addReservation } from "../features/reservationSlice";
 export default function RestaurantCard({ restaurant }) {
   const { userEmail, loggedUser } = useSelector((store) => store.login);
   const dispatch = useDispatch();
-
+  const nav = useNavigation();
   const [visible, setVisible] = React.useState(false);
 
   const onDismiss = React.useCallback(() => {
@@ -102,7 +102,7 @@ export default function RestaurantCard({ restaurant }) {
     <>
       <TouchableOpacity
         style={styles.card}
-        onPress={() => {
+        onPress={() => {console.log("restaurant.restaurantID: ",restaurant.id);loggedUser.admin?nav.push("editRestaurant",{"restaurantID":restaurant.id}):
           setOpenodal(true);
           //console.log("restCard line 12 openModal: ", openModal);
         }}
@@ -114,11 +114,11 @@ export default function RestaurantCard({ restaurant }) {
         /> */}
         <View style={{ display: "flex", flexDirection: "row" }}>
           <View style={{ ...styles.details, width: "80%" }}>
-            <Text style={styles.name}>{restaurant.name}</Text>
+            <Text style={{...styles.name,color:"#335930"}}>{restaurant.name}</Text>
 
-            <Text style={styles.location}>{restaurant.location}</Text>
-            <Text style={styles.contact}>{restaurant.phone}</Text>
-            <Text style={styles.ratings}>Ratings: {restaurant.ratings}</Text>
+            <Text style={{...styles.location,color:"#335930"}}>{restaurant.location}</Text>
+            <Text style={{...styles.contact,color:"#335930"}}>{restaurant.phone}</Text>
+            <Text style={{...styles.ratings}}>Ratings: {restaurant.ratings}</Text>
           </View>
           <View
             style={{
@@ -143,7 +143,7 @@ export default function RestaurantCard({ restaurant }) {
           <View style={styles.modalView}>
             <View
               style={{
-                width: "100%",
+                
                 backgroundColor: "#335930",
               }}
             >

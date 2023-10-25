@@ -22,6 +22,7 @@ const ReservationCard = ({ reservation }) => {
 
   const [visible, setVisible] = useState(false);
   const { restaurantsList } = useSelector((store) => store.restaurant);
+  const { loggedUser } = useSelector((store) => store.login);
   const myRestaurant = restaurantsList.find(
     (restaurant) => restaurant.id === reservation.restaurantID
   );
@@ -126,15 +127,16 @@ const ReservationCard = ({ reservation }) => {
   return (
     <View style={localStyles.card}>
       <View style={{ padding: 10 }}>
-        <View
+        {loggedUser.admin?<View
           style={{
             borderBottomColor: "#335930",
             borderBottomWidth: 1,
+            paddingBottom:10
           }}
         >
           <Text style={localStyles.title}>{reservation.fullname}</Text>
           <Text style={localStyles.value}>{reservation.userEmail}</Text>
-        </View>
+        </View>:null}
 
         <View
           style={{
@@ -155,7 +157,7 @@ const ReservationCard = ({ reservation }) => {
             <View style={{ display: "flex", flexDirection: "row" }}>
               <Text style={localStyles.label}>Time: </Text>
               <Text style={localStyles.value}>
-                {new Date(reservation.reservationDate).toTimeString()}
+                {new Date(reservation.reservationDate).toTimeString().split(" ")[0]}
               </Text>
             </View>
 
@@ -172,7 +174,7 @@ const ReservationCard = ({ reservation }) => {
         </View>
       </View>
 
-      <View
+      {!loggedUser.admin?<View
         style={{
           display: "flex",
           flexDirection: "row",
@@ -198,9 +200,9 @@ const ReservationCard = ({ reservation }) => {
             <FontAwesome name="trash" size={24} color="white" />
           </TouchableOpacity>
         </View>
-      </View>
+      </View>:null}
 
-      <View
+      {loggedUser.admin?<View
         style={{
           display: "flex",
           flexDirection: "row",
@@ -213,6 +215,7 @@ const ReservationCard = ({ reservation }) => {
         <View style={{}}>
           <Text style={{ fontSize: 25, color: "white" }}>Arrived</Text>
         </View>
+        
         <View>
           <TouchableOpacity onPress={handleArrived}>
             {reservation.arrived ? (
@@ -222,7 +225,7 @@ const ReservationCard = ({ reservation }) => {
             )}
           </TouchableOpacity>
         </View>
-      </View>
+      </View>:null}
 
       <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>

@@ -1,23 +1,30 @@
 import { Alert, ImageBackground, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { CTAButton } from "../../components/CTAButton";
-import { styles } from "../../assets/css/styles";
-const backgroundImage = require("../../assets/images/duotone.jpg");
-import { useDispatch } from "react-redux";
-import { addRestaurant } from "../../features/restaurantSlice";
+import { CTAButton } from "../components/CTAButton";
+import { styles } from "../assets/css/styles";
+const backgroundImage = require("../assets/images/duotone.jpg");
+import { useDispatch,useSelector } from "react-redux";
+import { addRestaurant } from "../features/restaurantSlice";
 
-export default function AddRestaurant() {
+export default function EditRestaurant({ route, navigation }) {
+    const { restaurantID } = route.params;
   const dispatch = useDispatch();
   const nav = useNavigation();
-
-  const [imageURL, setImageURL] = useState(null);
-  const [name, setName] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [phone, setPhone] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [numberOfTables, setNumberOfTables] = useState(0);
+  const { loggedUser } = useSelector((store) => store.login);
+  const { restaurantsList } = useSelector((store) => store.restaurant);
+  const myRestaurant = restaurantsList.find(
+    (restaurant) => restaurant.id === restaurantID
+  );
+  
+  console.log("editRestaurant.js lie 16 restaurantID: ",restaurantID)
+  const [imageURL, setImageURL] = useState(myRestaurant.imageURL);
+  const [name, setName] = useState(myRestaurant.name);
+  const [description, setDescription] = useState(myRestaurant.description);
+  const [location, setLocation] = useState(myRestaurant.location);
+  const [phone, setPhone] = useState(myRestaurant.phone);
+  const [email, setEmail] = useState(myRestaurant.email);
+  const [numberOfTables, setNumberOfTables] = useState(myRestaurant.numberOfTables);
 
   const handleAddRestaurant = async () => {
     if (
@@ -67,7 +74,7 @@ export default function AddRestaurant() {
               }}
             >
               <Text style={{ ...styles.subtitle, color: "white" }}>
-                Add a new restaurant
+                Edit a restaurant
               </Text>
             </View>
             <View style={{ padding: 10 }}>
