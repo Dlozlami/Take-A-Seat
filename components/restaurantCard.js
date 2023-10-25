@@ -96,6 +96,8 @@ export default function RestaurantCard({ restaurant }) {
       arrived: false,
     };
     dispatch(addReservation(reservationData));
+    setOpenodal(false)
+
   };
 
   return (
