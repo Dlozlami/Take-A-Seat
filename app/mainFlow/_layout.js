@@ -5,21 +5,22 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import HomeScreen from "./home";
+import AdminHome from "./adminHome";
 import ProfileScreen from "./profile";
 import ListScreen from "./list";
-
+import {useSelector } from "react-redux";
+import ClientHome from './clientHome'
 
 const Tab = createBottomTabNavigator();
 
 export default function MainFlow() {
-  
+  const { loggedUser } = useSelector((store) => store.login);
   return (
     <>
       <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
         <Tab.Screen
           name="home"
-          component={HomeScreen}
+          component={loggedUser.admin?AdminHome:ClientHome}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused, color, size }) => (

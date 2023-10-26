@@ -26,7 +26,7 @@ const today = Date.now();
   const myRestaurant = restaurantsList.find(
     (restaurant) => restaurant.id === reservation.restaurantID
   );
-  console.log("reservationCard.js line 29 reservation: ", reservation);
+  //console.log("reservationCard.js line 29 reservation: ", reservation);
 
   const onDismiss = React.useCallback(() => {
     setVisible(false);
@@ -58,7 +58,7 @@ const today = Date.now();
 
   const [openModal, setOpenModal] = useState(false);
 
-  console.log("RestaurantCard line 58 rendered: ", myRestaurant.name);
+  //console.log("RestaurantCard line 58 rendered: ", myRestaurant.name);
   const [date, setDate] = useState(new Date(reservation.reservationDate));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -97,7 +97,7 @@ const today = Date.now();
       guests: newGuests,
       arrived: false,
     };
-    console.log("RestaurantCard line 97 reservationData: ", reservationData);
+    //console.log("RestaurantCard line 97 reservationData: ", reservationData);
     dispatch(updateReservation([reservation.id, reservationData]));
     setOpenModal(false);
   };
@@ -116,7 +116,7 @@ const today = Date.now();
       guests: newGuests,
       arrived: reservation.arrived ? false : true,
     };
-    console.log("RestaurantCard line 97 reservationData: ", reservationData);
+    //console.log("RestaurantCard line 97 reservationData: ", reservationData);
     dispatch(updateReservation([reservation.id, reservationData]));
   };
 

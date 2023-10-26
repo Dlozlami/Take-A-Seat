@@ -84,7 +84,7 @@ export default function RestaurantCard({ restaurant }) {
     const today = new Date();
     date.setMinutes(0, 0, 0);
 
-    console.log("RestaurantCard line 87 loggedUser.name: ", userEmail);
+    //console.log("RestaurantCard line 87 loggedUser.name: ", userEmail);
     const reservationData = {
       restaurantID: restaurant.id,
       fullname: loggedUser.name,

@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -15,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { loginUser, setIsLoggedIn } from "../features/loginSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { authorisation } from "../firebaseConfig";
+import Preloader from "../components/preloader";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -28,7 +30,7 @@ export default function Login() {
     dispatch(loginUser({ email: email, password: password }));
     setEmail(null);
     setPassword(null);
-    setLoading(false);
+    
   };
 
   useEffect(() => {
@@ -42,6 +44,7 @@ export default function Login() {
         // User is signed out.
         console.log("_layout line 43 authUser: ", authUser);
         dispatch(setIsLoggedIn(false));
+        setLoading(false);
       }
     });
 
@@ -49,9 +52,9 @@ export default function Login() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  });
 
-  return (
+  return (<>
     <ImageBackground
       source={backgroundImage}
       style={{ width: "100%", height: "100%" }}
@@ -99,13 +102,14 @@ export default function Login() {
           </TouchableOpacity>
         </View>
       </View>
-      {loading && (
-        <ActivityIndicator
+    </ImageBackground>
+    <Modal visible={loading} transparent style={{display:"flex",flex:1,alignItems:"center",justifyContent:"center"}}>
+      <ActivityIndicator
           style={styles.activityIndicator}
           size="large"
           color="#3498db"
         />
-      )}
-    </ImageBackground>
+    </Modal>
+    </>
   );
 }

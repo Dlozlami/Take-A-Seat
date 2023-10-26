@@ -158,4 +158,27 @@ export const styles = {
     flexDirection: "row",
     alignItems:"center",
   },
+  
+  imageContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 15,
+  },
+  uploadedImage: {
+    width: 80,
+    height: 80,
+    margin: 5,
+  },
+  uploadButton: {
+    // width: 80,
+    // height: 80,
+    // borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5,
+  },
+  uploadButtonText: {
+    color: "#3498db",
+  },
 };

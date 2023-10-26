@@ -24,7 +24,7 @@ export default function List() {
   useEffect(() => {
     const restaurantIDList = myRestaurants.map(restaurant => restaurant.id);
     const user = authorisation.currentUser;
-    console.log("list.js line 22 userEmail: ", user.email);
+    //console.log("list.js line 22 userEmail: ", user.email);
     !loggedUser.admin?dispatch(getReservationsByUserEmail(user.email)):
     dispatch(getReservationsByRestaurantID(restaurantIDList));
   }, []);

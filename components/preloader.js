@@ -3,6 +3,7 @@ import React from "react";
 import spinner from "../assets/icons/preloader.gif";
 
 export default function Preloader({ loading }) {
+  console.log("Preloader line 6 loading: ",loading)
   return (
     <Modal transparent={true} visible={loading} animationType="fade">
       <View style={styles.centeredView}>

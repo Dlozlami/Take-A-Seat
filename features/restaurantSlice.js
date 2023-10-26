@@ -54,6 +54,26 @@ export const addRestaurant = createAsyncThunk(
   }
 );
 
+
+export const upload = createAsyncThunk(
+  "restaurant/addRestaurant",
+  async (restaurantData, thunkAPI) => {
+    const restaurantsCollection = collection(db, "restaurants");
+    //console.log("New restaurant adding 12..:");
+
+    try {
+      const newRestaurant = await addDoc(restaurantsCollection, restaurantData);
+      Alert.alert("Success", "The restaurant has been added successfully.");
+      alert("The restaurant has been added successfully.");
+      console.log("New restaurant document ID:", newRestaurant.id);
+    } catch (error) {
+      console.error("Error creating restaurant:", error);
+    }
+  }
+);
+
+
+
 export const getRestaurants = createAsyncThunk(
   "restaurant/getRestaurants",
   async (_, thunkAPI) => {

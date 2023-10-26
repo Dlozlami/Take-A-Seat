@@ -3,28 +3,31 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  ScrollView,Text
+  ScrollView,
+  Text,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { styles } from "../../assets/css/styles";
 const backgroundImage = require("../../assets/images/duotone.jpg");
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurants,getRestaurantsByOwner } from "../../features/restaurantSlice";
+import {
+  getRestaurantsByOwner,
+} from "../../features/restaurantSlice";
 import Search from "../../components/search";
-import FilterBTN from "../../components/filterBTN";
 import RestaurantCard from "../../components/restaurantCard";
 import AddRestaurantBTN from "../../components/addRestaurantBTN";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Home() {
-  const {loggedUser } = useSelector((store) => store.login);
-  const { restaurantsList,myRestaurants } = useSelector((store) => store.restaurant);
+export default function AdminHome() {
+  const { loggedUser } = useSelector((store) => store.login);
+  const { myRestaurants } = useSelector((store) => store.restaurant);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    !loggedUser.admin?dispatch(getRestaurants()):
     dispatch(getRestaurantsByOwner(loggedUser.email));
+    setLoading(true);
     console.log("Render");
     setLoading(false);
   }, []);
@@ -37,31 +40,23 @@ export default function Home() {
       >
         <View style={styles.header}>
           <Search />
-          {loggedUser.admin?
-          <Text style={{fontSize:20,fontWeight:700,paddingVertical:20,color:"#335930"}}>My Restaurants</Text>
-          :
-          <ScrollView
-            horizontal
-            contentContainerStyle={myStyles.horizonalScroll} showsHorizontalScrollIndicator={false}
+
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              paddingVertical: 20,
+              color: "#335930",
+            }}
           >
-            <FilterBTN title="Sushi" />
-            <FilterBTN title="7 colours" />
-            <FilterBTN title="Burgers" />
-            <FilterBTN title="Seafood" />
-            <FilterBTN title="Chinese" />
-            <FilterBTN title="Thai" />
-            <FilterBTN title="Italian" />
-          </ScrollView>
-          }
+            My Restaurants
+          </Text>
         </View>
-        {/*console.log(restaurantsList)*/}
+
         <ScrollView contentContainerStyle={myStyles.cardContainer}>
-          {!loggedUser.admin ?restaurantsList.map((restaurant, index) => (
-            <RestaurantCard key={index} restaurant={restaurant} />
-          )):myRestaurants.map((restaurant, index) => (
+          {myRestaurants.map((restaurant, index) => (
             <RestaurantCard key={index} restaurant={restaurant} />
           ))}
-
         </ScrollView>
       </ImageBackground>
       {loading && (
@@ -72,6 +67,22 @@ export default function Home() {
         />
       )}
       <AddRestaurantBTN />
+      <Modal
+        visible={loading}
+        transparent
+        style={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator
+          style={styles.activityIndicator}
+          size="large"
+          color="#3498db"
+        />
+      </Modal>
     </>
   );
 }

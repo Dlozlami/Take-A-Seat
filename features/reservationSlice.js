@@ -49,7 +49,7 @@ const reservationSlice = createSlice({
 export const addReservation = createAsyncThunk(
   "reservation/addReservation",
   async (reservationData, thunkAPI) => {
-    console.log("New restaurant adding :",reservationData);
+    //console.log("New restaurant adding :",reservationData);
     const reservationsCollection = collection(db, "reservations");
 
     try {
@@ -69,7 +69,7 @@ export const addReservation = createAsyncThunk(
 export const getReservationsByUserEmail = createAsyncThunk(
   "reservation/getReservationsByUserEmail",
   async (userEmail, thunkAPI) => {
-    console.log("reservationsSlice.js line 73 userEmail: ", userEmail);
+    //console.log("reservationsSlice.js line 73 userEmail: ", userEmail);
     try {
       const reservationsCollection = collection(db, "reservations");
 
@@ -101,7 +101,7 @@ export const getReservationsByUserEmail = createAsyncThunk(
 export const getReservationsByRestaurantID = createAsyncThunk(
   "reservation/getReservationsByRestaurantID",
   async (restaurantIDList, thunkAPI) => {
-    console.log("reservationsSlice.js line 104 restaurantIDList: ", restaurantIDList);
+    //console.log("reservationsSlice.js line 104 restaurantIDList: ", restaurantIDList);
     try {
       const reservationsCollection = collection(db, "reservations");
       const reservationPromises = restaurantIDList.map(async (restaurantID) => {
@@ -141,7 +141,7 @@ export const getReservationsByRestaurantID = createAsyncThunk(
 export const deleteReservation = createAsyncThunk(
   "reservation/deleteReservation",
   async (reservationID, thunkAPI) => {
-    console.log("reservationsSlice.js line 138 reservationID: ", reservationID);
+    //console.log("reservationsSlice.js line 138 reservationID: ", reservationID);
     try {
         deleteDoc(doc(db,"reservations",reservationID));
         Alert.alert("Success", "The reservation has been deleted successfully.");
@@ -159,7 +159,7 @@ export const deleteReservation = createAsyncThunk(
 export const updateReservation = createAsyncThunk(
   "reservation/updateReservation",
   async (reservationData, thunkAPI) => {
-    console.log("reservationsSlice.js line 153 reservationID: ", reservationData[0]);
+    //console.log("reservationsSlice.js line 153 reservationID: ", reservationData[0]);
     try {
         updateDoc(doc(db,"reservations",reservationData[0]),reservationData[1]);
         Alert.alert("Success", "The reservation has been updated successfully.");
