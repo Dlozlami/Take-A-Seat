@@ -10,7 +10,7 @@ import { addRestaurant } from "../features/restaurantSlice";
 export default function AddRestaurant() {
   const dispatch = useDispatch();
   const nav = useNavigation();
-
+  const { loggedUser } = useSelector((store) => store.login);
   const [imageURL, setImageURL] = useState(null);
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
@@ -38,6 +38,7 @@ export default function AddRestaurant() {
         email: email,
         numberOfTables: numberOfTables,
         ratings: [0.0],
+        owner:loggedUser.email
       };
       dispatch(addRestaurant(newRestaurant));
       setName(null);

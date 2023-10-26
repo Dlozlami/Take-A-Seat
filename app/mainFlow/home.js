@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import { styles } from "../../assets/css/styles";
 const backgroundImage = require("../../assets/images/duotone.jpg");
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurants } from "../../features/restaurantSlice";
+import { getRestaurants,getRestaurantsByOwner } from "../../features/restaurantSlice";
 import Search from "../../components/search";
 import FilterBTN from "../../components/filterBTN";
 import RestaurantCard from "../../components/restaurantCard";
@@ -17,13 +17,14 @@ import AddRestaurantBTN from "../../components/addRestaurantBTN";
 
 export default function Home() {
   const {loggedUser } = useSelector((store) => store.login);
-  const { restaurantsList } = useSelector((store) => store.restaurant);
+  const { restaurantsList,myRestaurants } = useSelector((store) => store.restaurant);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getRestaurants());
+    !loggedUser.admin?dispatch(getRestaurants()):
+    dispatch(getRestaurantsByOwner(loggedUser.email));
     console.log("Render");
     setLoading(false);
   }, []);
@@ -55,9 +56,12 @@ export default function Home() {
         </View>
         {/*console.log(restaurantsList)*/}
         <ScrollView contentContainerStyle={myStyles.cardContainer}>
-          {restaurantsList.map((restaurant, index) => (
+          {!loggedUser.admin ?restaurantsList.map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
+          )):myRestaurants.map((restaurant, index) => (
             <RestaurantCard key={index} restaurant={restaurant} />
           ))}
+
         </ScrollView>
       </ImageBackground>
       {loading && (

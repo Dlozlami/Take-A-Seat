@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authorisation, db } from "../firebaseConfig";
 import { Alert } from "react-native";
-import { addDoc, getDocs, collection, updateDoc, doc } from "firebase/firestore";
+import { addDoc, getDocs, collection, updateDoc, doc,query,where } from "firebase/firestore";
 
 const initialState = {
   loading: false,

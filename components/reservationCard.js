@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal } from "react-native";
+import { View, Text, StyleSheet, Modal,TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FontAwesome,
   MaterialCommunityIcons,
   AntDesign,
 } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   deleteReservation,
   updateReservation,
@@ -19,6 +18,7 @@ import { TimePickerModal } from "react-native-paper-dates";
 
 const ReservationCard = ({ reservation }) => {
   const dispatch = useDispatch();
+const today = Date.now();
 
   const [visible, setVisible] = useState(false);
   const { restaurantsList } = useSelector((store) => store.restaurant);
@@ -56,7 +56,7 @@ const ReservationCard = ({ reservation }) => {
 
   const [newGuests, setNewGuests] = useState(reservation.guests);
 
-  const [openModal, setOpenodal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   console.log("RestaurantCard line 58 rendered: ", myRestaurant.name);
   const [date, setDate] = useState(new Date(reservation.reservationDate));
@@ -99,7 +99,7 @@ const ReservationCard = ({ reservation }) => {
     };
     console.log("RestaurantCard line 97 reservationData: ", reservationData);
     dispatch(updateReservation([reservation.id, reservationData]));
-    setOpenodal(false);
+    setOpenModal(false);
   };
 
   const handleArrived = () => {
@@ -122,6 +122,10 @@ const ReservationCard = ({ reservation }) => {
 
   const handleDelete = () => {
     dispatch(deleteReservation(reservation.id));
+  };
+  
+  const handleClose = () => {
+    setOpenModal(!openModal)
   };
 
   return (
@@ -172,11 +176,11 @@ const ReservationCard = ({ reservation }) => {
               <Text style={localStyles.value}>{newGuests}</Text>
             </View>
           </View>
-          <View>
-          {!loggedUser.admin ?<TouchableOpacity onPress={() => setOpenodal(true)}>
+          {today<reservation.reservationDate?<View>
+          {!loggedUser.admin ?<TouchableOpacity onPress={handleClose}>
               <FontAwesome name="edit" size={24} color="#335930" />
             </TouchableOpacity>:null}
-          </View>
+          </View>:null}
         </View>
       </View>
 
@@ -184,7 +188,7 @@ const ReservationCard = ({ reservation }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          backgroundColor: "#335930",
+          backgroundColor: today<reservation.reservationDate ? "#335930" : "#bdbdbd",
           padding: 10,
           justifyContent: "space-between",
           alignItems: "center",
@@ -201,11 +205,13 @@ const ReservationCard = ({ reservation }) => {
             {myRestaurant.phone}
           </Text>
         </View>
+
         <View>
           {!loggedUser.admin ? (
-            <TouchableOpacity onPress={handleDelete}>
+            <View>
+            {today<reservation.reservationDate?<TouchableOpacity onPress={handleDelete}>
               <FontAwesome name="trash" size={24} color="white" />
-            </TouchableOpacity>
+            </TouchableOpacity>:null}</View>
           ) : (
             <View><MaterialCommunityIcons
             name="table-chair"
@@ -248,7 +254,6 @@ const ReservationCard = ({ reservation }) => {
           <View style={styles.modalView}>
             <View
               style={{
-                width: "100%",
                 backgroundColor: "#335930",
               }}
             >
@@ -420,9 +425,10 @@ const ReservationCard = ({ reservation }) => {
               <TouchableOpacity style={styles.okButton} onPress={handleUpdate}>
                 <Text style={styles.okButtonText}>Update Reservation</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.okButton}
-                onPress={() => setOpenodal(false)}
+                onPress={() => setOpenModal(false)}
               >
                 <Text style={styles.okButtonText}>Cancel</Text>
               </TouchableOpacity>

@@ -100,27 +100,34 @@ export const getReservationsByUserEmail = createAsyncThunk(
 
 export const getReservationsByRestaurantID = createAsyncThunk(
   "reservation/getReservationsByRestaurantID",
-  async (restaurantID, thunkAPI) => {
-    console.log("reservationsSlice.js line 65 restaurantID: ", restaurantID);
+  async (restaurantIDList, thunkAPI) => {
+    console.log("reservationsSlice.js line 104 restaurantIDList: ", restaurantIDList);
     try {
       const reservationsCollection = collection(db, "reservations");
+      const reservationPromises = restaurantIDList.map(async (restaurantID) => {
+        const queryReservations = query(
+          reservationsCollection,
+          where("restaurantID", "==", restaurantID)
+        );
+        const querySnapshot = await getDocs(queryReservations);
+        
+        const reservations = [];
 
-      const queryReservations = query(
-        reservationsCollection,
-        where("restaurantID", "==", restaurantID)
-      );
-      const querySnapshot = await getDocs(queryReservations);
+        querySnapshot.forEach((doc) => {
+          const reservationData = doc.data();
+          const reservation = {
+            id: doc.id, // Extracting the ID
+            ...reservationData, // Rest of the data
+          };
+          reservations.push(reservation);
+        });
 
-      const reservations = [];
-      querySnapshot.forEach((doc) => {
-        const reservationData = doc.data();
-        const reservation = {
-          id: doc.id, // Extracting the ID
-          ...reservationData, // Rest of the data
-        };
-        reservations.push(reservation);
+        return reservations;
       });
-      //console.log("Reservation list: ", reservations);
+
+      const allReservations = await Promise.all(reservationPromises);
+      const reservations = allReservations.flat(); // Flatten the array of arrays
+
       reservations.sort((a, b) => a.reservationDate - b.reservationDate);
       return reservations;
     } catch (error) {
@@ -129,6 +136,7 @@ export const getReservationsByRestaurantID = createAsyncThunk(
     }
   }
 );
+
 
 export const deleteReservation = createAsyncThunk(
   "reservation/deleteReservation",

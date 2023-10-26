@@ -11,19 +11,22 @@ import { useNavigation } from "@react-navigation/native";
 import { authorisation } from "../../firebaseConfig";
 const backgroundImage = require("../../assets/images/duotone.jpg");
 import { useDispatch, useSelector } from "react-redux";
-import { getReservationsByUserEmail } from "../../features/reservationSlice";
+import { getReservationsByUserEmail,getReservationsByRestaurantID } from "../../features/reservationSlice";
 import ReservationCard from "../../components/reservationCard";
 import Constants from "expo-constants";
 
 export default function List() {
   const dispatch = useDispatch();
-  const { reservationsList } = useSelector((store) => store.reservation);
-  const { userEmail } = useSelector((store) => store.login);
+  const { reservationsList,restaurantReservations } = useSelector((store) => store.reservation);
+  const {loggedUser } = useSelector((store) => store.login);
+  const { myRestaurants } = useSelector((store) => store.restaurant);
 
   useEffect(() => {
+    const restaurantIDList = myRestaurants.map(restaurant => restaurant.id);
     const user = authorisation.currentUser;
     console.log("list.js line 22 userEmail: ", user.email);
-    dispatch(getReservationsByUserEmail(user.email));
+    !loggedUser.admin?dispatch(getReservationsByUserEmail(user.email)):
+    dispatch(getReservationsByRestaurantID(restaurantIDList));
   }, []);
 
   return (
@@ -35,7 +38,9 @@ export default function List() {
       }}
     >
       <ScrollView style={{paddingTop:Constants.statusBarHeight}}>
-        {reservationsList.map((reservation) => (
+        {loggedUser.admin?restaurantReservations.map((reservation) => (
+        <ReservationCard key={reservation.id} reservation={reservation} />
+      )):reservationsList.map((reservation) => (
         <ReservationCard key={reservation.id} reservation={reservation} />
       ))}
       </ScrollView>
