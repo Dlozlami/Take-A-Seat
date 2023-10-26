@@ -1,4 +1,4 @@
-import { Alert, ImageBackground, Text, View, TextInput } from "react-native";
+import { Alert, ImageBackground, Text, View, TextInput,TouchableOpacity,Image } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { CTAButton } from "../components/CTAButton";
@@ -6,6 +6,9 @@ import { styles } from "../assets/css/styles";
 const backgroundImage = require("../assets/images/duotone.jpg");
 import { useDispatch,useSelector } from "react-redux";
 import {updateRestaurant } from "../features/restaurantSlice";
+import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Feather } from "@expo/vector-icons";
 
 export default function EditRestaurant({ route, navigation }) {
     const { restaurantID } = route.params;
@@ -18,7 +21,6 @@ export default function EditRestaurant({ route, navigation }) {
   );
   
   console.log("editRestaurant.js lie 16 restaurantID: ",restaurantID)
-  const [imageURL, setImageURL] = useState(myRestaurant.imageURL);
   const [name, setName] = useState(myRestaurant.name);
   const [description, setDescription] = useState(myRestaurant.description);
   const [location, setLocation] = useState(myRestaurant.location);
@@ -26,11 +28,51 @@ export default function EditRestaurant({ route, navigation }) {
   const [email, setEmail] = useState(myRestaurant.email);
   const [numberOfTables, setNumberOfTables] = useState(myRestaurant.numberOfTables);
   const [ratings, setRatings] = useState(myRestaurant.ratings)
+  const [images, setImages] = useState(myRestaurant.imageURL);
+  const storage = getStorage();
+  let imageUploadMessage = "Upload Image";
+
+  const handleImageUpload = async () => {
+    // Check for permissions to access the device's image library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      alert("Permission to access the image library is required!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      multiple: true,
+    });
+
+    if (!result.canceled) {
+      const imageUri = result.uri;
+
+      // Create a reference to Firebase Storage
+      const storageRef = ref(storage, `images/${Date.now()}`);
+
+      try {
+        // Convert the image file to a Blob
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+        await uploadBytes(storageRef, blob);
+        // Get the download URL for the uploaded image
+        const downloadURL = await getDownloadURL(storageRef);
+        setImages(downloadURL);
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+      }
+    }
+  };
 
   const handleEditRestaurant = async () => {
     if (
       email &&
-      imageURL &&
+      images &&
       name &&
       description &&
       location &&
@@ -38,7 +80,7 @@ export default function EditRestaurant({ route, navigation }) {
       numberOfTables
     ) {
       const newRestaurant = {
-        imageURL: imageURL,
+        imageURL: images,
         name: name,
         description: description,
         location: location,
@@ -53,7 +95,6 @@ export default function EditRestaurant({ route, navigation }) {
       setEmail(null);
       setLocation(null);
       setDescription(null);
-      setImageURL(null);
       setPhone(null);
       setNumberOfTables(null);
       nav.push("index");
@@ -113,14 +154,6 @@ export default function EditRestaurant({ route, navigation }) {
               />
               <TextInput
                 style={styles.loginTextField}
-                placeholder="Image URL"
-                value={imageURL || ""}
-                onChangeText={setImageURL}
-                autoCapitalize="none"
-                inputMode="text"
-              />
-              <TextInput
-                style={styles.loginTextField}
                 placeholder="Address"
                 value={location || ""}
                 onChangeText={setLocation}
@@ -134,6 +167,21 @@ export default function EditRestaurant({ route, navigation }) {
                 onChangeText={setNumberOfTables}
                 inputMode="numeric"
               />
+              <View style={styles.imageContainer}>
+                <TouchableOpacity
+                  style={styles.uploadButton}
+                  onPress={handleImageUpload}
+                >
+                  <Feather name="upload" size={20} color="#639e79" style={{marginRight:3}}/>
+                  <Text style={styles.uploadButtonText}>Upload Image</Text>
+                </TouchableOpacity>
+                {images && (
+                  <Image
+                    source={{ uri: images }}
+                    style={styles.uploadedImage}
+                  />
+                )}
+              </View>
             </View>
             <View style={{ padding: 10 }}>
               <CTAButton

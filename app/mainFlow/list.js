@@ -37,14 +37,17 @@ export default function List() {
         height: "100%",
       }}
     >
-      <ScrollView style={{paddingTop:Constants.statusBarHeight}}>
+      <ScrollView style={{paddingVertical:Constants.statusBarHeight}}>
         {loggedUser.admin?restaurantReservations.map((reservation) => (
         <ReservationCard key={reservation.id} reservation={reservation} />
       )):reservationsList.map((reservation) => (
         <ReservationCard key={reservation.id} reservation={reservation} />
       ))}
+      <View style={{padding:10}}>
+        <Text></Text>
+      </View>
       </ScrollView>
-      
+
     </ImageBackground>
   );
 }

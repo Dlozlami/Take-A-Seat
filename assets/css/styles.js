@@ -170,15 +170,16 @@ export const styles = {
     margin: 5,
   },
   uploadButton: {
-    // width: 80,
-    // height: 80,
-    // borderWidth: 1,
-    borderColor: "#ccc",
+    display: "flex",
+    flexDirection: "row",
+    borderColor: "#639e79",
+    borderWidth:1,
     justifyContent: "center",
     alignItems: "center",
     margin: 5,
+    padding:5
   },
   uploadButtonText: {
-    color: "#3498db",
+    color: "#639e79",
   },
 };

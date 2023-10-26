@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal,TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Modal, TouchableOpacity, ImageBackground } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FontAwesome,
@@ -18,7 +18,7 @@ import { TimePickerModal } from "react-native-paper-dates";
 
 const ReservationCard = ({ reservation }) => {
   const dispatch = useDispatch();
-const today = Date.now();
+  const today = Date.now();
 
   const [visible, setVisible] = useState(false);
   const { restaurantsList } = useSelector((store) => store.restaurant);
@@ -123,132 +123,148 @@ const today = Date.now();
   const handleDelete = () => {
     dispatch(deleteReservation(reservation.id));
   };
-  
+
   const handleClose = () => {
-    setOpenModal(!openModal)
+    setOpenModal(!openModal);
   };
 
   return (
     <View style={localStyles.card}>
-      <View style={{ padding: 10 }}>
-        {loggedUser.admin ? (
+      <ImageBackground
+        source={{ uri: myRestaurant.imageURL }}
+        resizeMode="cover"
+        style={{ padding: 100 }}
+      ></ImageBackground>
+      <View>
+        <View style={{ padding: 10 }}>
+          {loggedUser.admin ? (
+            <View
+              style={{
+                borderBottomColor: "#335930",
+                borderBottomWidth: 1,
+                paddingBottom: 10,
+              }}
+            >
+              <Text style={localStyles.title}>{reservation.fullname}</Text>
+              <Text style={localStyles.value}>{reservation.userEmail}</Text>
+            </View>
+          ) : null}
+
           <View
             style={{
-              borderBottomColor: "#335930",
-              borderBottomWidth: 1,
-              paddingBottom: 10,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <Text style={localStyles.title}>{reservation.fullname}</Text>
-            <Text style={localStyles.value}>{reservation.userEmail}</Text>
-          </View>
-        ) : null}
-
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <View>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Text style={localStyles.label}>Date: </Text>
-              <Text style={localStyles.value}>
-                {new Date(reservation.reservationDate).toDateString()}
-              </Text>
-            </View>
-
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Text style={localStyles.label}>Time: </Text>
-              <Text style={localStyles.value}>
-                {
-                  new Date(reservation.reservationDate)
-                    .toTimeString()
-                    .split(" ")[0]
-                }
-              </Text>
-            </View>
-
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Text style={localStyles.label}>Guests: </Text>
-              <Text style={localStyles.value}>{newGuests}</Text>
-            </View>
-          </View>
-          {today<reservation.reservationDate?<View>
-          {!loggedUser.admin ?<TouchableOpacity onPress={handleClose}>
-              <FontAwesome name="edit" size={24} color="#335930" />
-            </TouchableOpacity>:null}
-          </View>:null}
-        </View>
-      </View>
-
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          backgroundColor: today<reservation.reservationDate ? "#335930" : "#bdbdbd",
-          padding: 10,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <View>
-          <Text style={{ ...localStyles.label, color: "white" }}>
-            {myRestaurant.name}
-          </Text>
-          <Text style={{ ...localStyles.value, color: "white" }}>
-            {myRestaurant.location}
-          </Text>
-          <Text style={{ ...localStyles.value, color: "white" }}>
-            {myRestaurant.phone}
-          </Text>
-        </View>
-
-        <View>
-          {!loggedUser.admin ? (
             <View>
-            {today<reservation.reservationDate?<TouchableOpacity onPress={handleDelete}>
-              <FontAwesome name="trash" size={24} color="white" />
-            </TouchableOpacity>:null}</View>
-          ) : (
-            <View><MaterialCommunityIcons
-            name="table-chair"
-            size={24}
-            color="white"
-          /></View>
-          )}
-        </View>
-      </View>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text style={localStyles.label}>Date: </Text>
+                <Text style={localStyles.value}>
+                  {new Date(reservation.reservationDate).toDateString()}
+                </Text>
+              </View>
 
-      {loggedUser.admin ? (
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text style={localStyles.label}>Time: </Text>
+                <Text style={localStyles.value}>
+                  {
+                    new Date(reservation.reservationDate)
+                      .toTimeString()
+                      .split(" ")[0]
+                  }
+                </Text>
+              </View>
+
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text style={localStyles.label}>Guests: </Text>
+                <Text style={localStyles.value}>{newGuests}</Text>
+              </View>
+            </View>
+            {today < reservation.reservationDate ? (
+              <View>
+                {!loggedUser.admin ? (
+                  <TouchableOpacity onPress={handleClose}>
+                    <FontAwesome name="edit" size={24} color="#335930" />
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            ) : null}
+          </View>
+        </View>
+
         <View
           style={{
             display: "flex",
             flexDirection: "row",
-            backgroundColor: reservation.arrived ? "#3dc67d" : "#f3572a",
+            backgroundColor:
+              today < reservation.reservationDate ? "#335930" : "#bdbdbd",
             padding: 10,
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <View style={{}}>
-            <Text style={{ fontSize: 25, color: "white" }}>Arrived</Text>
+          <View>
+            <Text style={{ ...localStyles.label, color: "white" }}>
+              {myRestaurant.name}
+            </Text>
+            <Text style={{ ...localStyles.value, color: "white" }}>
+              {myRestaurant.location}
+            </Text>
+            <Text style={{ ...localStyles.value, color: "white" }}>
+              {myRestaurant.phone}
+            </Text>
           </View>
 
           <View>
-            <TouchableOpacity onPress={handleArrived}>
-              {reservation.arrived ? (
-                <AntDesign name="checksquareo" size={24} color="white" />
-              ) : (
-                <AntDesign name="closesquareo" size={24} color="white" />
-              )}
-            </TouchableOpacity>
+            {!loggedUser.admin ? (
+              <View>
+                {today < reservation.reservationDate ? (
+                  <TouchableOpacity onPress={handleDelete}>
+                    <FontAwesome name="trash" size={24} color="white" />
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            ) : (
+              <View>
+                <MaterialCommunityIcons
+                  name="table-chair"
+                  size={24}
+                  color="white"
+                />
+              </View>
+            )}
           </View>
         </View>
-      ) : null}
 
+        {loggedUser.admin ? (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              backgroundColor: reservation.arrived ? "#3dc67d" : "#f3572a",
+              padding: 10,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <View style={{}}>
+              <Text style={{ fontSize: 25, color: "white" }}>Arrived</Text>
+            </View>
+
+            <View>
+              <TouchableOpacity onPress={handleArrived}>
+                {reservation.arrived ? (
+                  <AntDesign name="checksquareo" size={24} color="white" />
+                ) : (
+                  <AntDesign name="closesquareo" size={24} color="white" />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+      </View>
       <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>

@@ -9,6 +9,7 @@ import {
   Pressable,
   Button,
   Platform,
+  ImageBackground,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -105,21 +106,20 @@ export default function RestaurantCard({ restaurant }) {
 
   return (
     <>
-      <View
-        style={{...styles.card,display: "flex", flexDirection: "row" }}
-      >
-        {/* <Image
-          source={restaurant.imageURL}
-          style={styles.image}
-          resizeMode="cover"
-        /> */}
-        <TouchableOpacity onPress={() => {
-          console.log("restaurant.restaurantID: ", restaurant.id);
-          loggedUser.admin
-            ? nav.push("editRestaurant", { restaurantID: restaurant.id })
-            : setOpenodal(true);
-          //console.log("restCard line 12 openModal: ", openModal);
-        }} style={{width: "80%" }}>
+      <View style={{ ...styles.card}}>
+        <ImageBackground source={{ uri: restaurant.imageURL }}resizeMode="cover" style={{padding:100}}>
+        </ImageBackground>
+        <View style={{display:"flex",flexDirection:"row"}}>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("restaurant.restaurantID: ", restaurant.id);
+            loggedUser.admin
+              ? nav.push("editRestaurant", { restaurantID: restaurant.id })
+              : setOpenodal(true);
+            //console.log("restCard line 12 openModal: ", openModal);
+          }}
+          style={{ width: "80%" }}
+        >
           <View style={{ ...styles.details }}>
             <Text style={{ ...styles.name, color: "#335930" }}>
               {restaurant.name}
@@ -135,31 +135,36 @@ export default function RestaurantCard({ restaurant }) {
               Ratings: {restaurant.ratings}
             </Text>
           </View>
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              width: "20%",
-              alignItems: "center",
-              backgroundColor: "#335930",
-            }}
+        </TouchableOpacity>
 
-            onPress={()=>{
-              loggedUser.admin?handleDelete:null;
-            }}
-          >
-            {
-              loggedUser.admin?<MaterialCommunityIcons name="trash-can-outline" size={24} color="white" />:
+        <TouchableOpacity
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            width: "20%",
+            alignItems: "center",
+            backgroundColor: "#335930",
+          }}
+          onPress={() => {
+            loggedUser.admin ? handleDelete : null;
+          }}
+        >
+          {loggedUser.admin ? (
+            <MaterialCommunityIcons
+              name="trash-can-outline"
+              size={24}
+              color="white"
+            />
+          ) : (
             <MaterialCommunityIcons
               name="table-chair"
               size={24}
               color="white"
-            />}
-           </TouchableOpacity>    
+            />
+          )}
+        </TouchableOpacity>
+        </View>
       </View>
-
 
       <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>

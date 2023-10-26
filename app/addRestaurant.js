@@ -1,4 +1,11 @@
-import { ImageBackground, Text, View, TextInput,TouchableOpacity,Image } from "react-native";
+import {
+  ImageBackground,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { CTAButton } from "../components/CTAButton";
@@ -8,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addRestaurant } from "../features/restaurantSlice";
 import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Feather } from "@expo/vector-icons";
 
 export default function AddRestaurant() {
   const dispatch = useDispatch();
@@ -21,6 +29,7 @@ export default function AddRestaurant() {
   const [numberOfTables, setNumberOfTables] = useState(0);
   const [images, setImages] = useState(null);
   const storage = getStorage();
+  let imageUploadMessage = "Upload Image";
 
   const handleImageUpload = async () => {
     // Check for permissions to access the device's image library
@@ -85,9 +94,9 @@ export default function AddRestaurant() {
       setEmail(null);
       setLocation(null);
       setDescription(null);
-      setImageURL(null);
       setPhone(null);
       setNumberOfTables(null);
+      nav.push("index");
     } else {
       alert("Please fill in all the fields.");
     }
@@ -158,20 +167,20 @@ export default function AddRestaurant() {
                 inputMode="numeric"
               />
 
-              <Text style={styles.label}>Image:</Text>
               <View style={styles.imageContainer}>
+                <TouchableOpacity
+                  style={styles.uploadButton}
+                  onPress={handleImageUpload}
+                >
+                  <Feather name="upload" size={20} color="#639e79" style={{marginRight:3}}/>
+                  <Text style={styles.uploadButtonText}>Upload Image</Text>
+                </TouchableOpacity>
                 {images && (
                   <Image
                     source={{ uri: images }}
                     style={styles.uploadedImage}
                   />
                 )}
-                <TouchableOpacity
-                  style={styles.uploadButton}
-                  onPress={handleImageUpload}
-                >
-                  <Text style={styles.uploadButtonText}>Upload Image</Text>
-                </TouchableOpacity>
               </View>
             </View>
             <View style={{ padding: 10 }}>
