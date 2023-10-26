@@ -127,16 +127,18 @@ const ReservationCard = ({ reservation }) => {
   return (
     <View style={localStyles.card}>
       <View style={{ padding: 10 }}>
-        {loggedUser.admin?<View
-          style={{
-            borderBottomColor: "#335930",
-            borderBottomWidth: 1,
-            paddingBottom:10
-          }}
-        >
-          <Text style={localStyles.title}>{reservation.fullname}</Text>
-          <Text style={localStyles.value}>{reservation.userEmail}</Text>
-        </View>:null}
+        {loggedUser.admin ? (
+          <View
+            style={{
+              borderBottomColor: "#335930",
+              borderBottomWidth: 1,
+              paddingBottom: 10,
+            }}
+          >
+            <Text style={localStyles.title}>{reservation.fullname}</Text>
+            <Text style={localStyles.value}>{reservation.userEmail}</Text>
+          </View>
+        ) : null}
 
         <View
           style={{
@@ -157,7 +159,11 @@ const ReservationCard = ({ reservation }) => {
             <View style={{ display: "flex", flexDirection: "row" }}>
               <Text style={localStyles.label}>Time: </Text>
               <Text style={localStyles.value}>
-                {new Date(reservation.reservationDate).toTimeString().split(" ")[0]}
+                {
+                  new Date(reservation.reservationDate)
+                    .toTimeString()
+                    .split(" ")[0]
+                }
               </Text>
             </View>
 
@@ -167,14 +173,14 @@ const ReservationCard = ({ reservation }) => {
             </View>
           </View>
           <View>
-            <TouchableOpacity onPress={() => setOpenodal(true)}>
+          {!loggedUser.admin ?<TouchableOpacity onPress={() => setOpenodal(true)}>
               <FontAwesome name="edit" size={24} color="#335930" />
-            </TouchableOpacity>
+            </TouchableOpacity>:null}
           </View>
         </View>
       </View>
 
-      {!loggedUser.admin?<View
+      <View
         style={{
           display: "flex",
           flexDirection: "row",
@@ -196,36 +202,46 @@ const ReservationCard = ({ reservation }) => {
           </Text>
         </View>
         <View>
-          <TouchableOpacity onPress={handleDelete}>
-            <FontAwesome name="trash" size={24} color="white" />
-          </TouchableOpacity>
+          {!loggedUser.admin ? (
+            <TouchableOpacity onPress={handleDelete}>
+              <FontAwesome name="trash" size={24} color="white" />
+            </TouchableOpacity>
+          ) : (
+            <View><MaterialCommunityIcons
+            name="table-chair"
+            size={24}
+            color="white"
+          /></View>
+          )}
         </View>
-      </View>:null}
+      </View>
 
-      {loggedUser.admin?<View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          backgroundColor: reservation.arrived ? "#3dc67d" : "#f3572a",
-          padding: 10,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <View style={{}}>
-          <Text style={{ fontSize: 25, color: "white" }}>Arrived</Text>
+      {loggedUser.admin ? (
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            backgroundColor: reservation.arrived ? "#3dc67d" : "#f3572a",
+            padding: 10,
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View style={{}}>
+            <Text style={{ fontSize: 25, color: "white" }}>Arrived</Text>
+          </View>
+
+          <View>
+            <TouchableOpacity onPress={handleArrived}>
+              {reservation.arrived ? (
+                <AntDesign name="checksquareo" size={24} color="white" />
+              ) : (
+                <AntDesign name="closesquareo" size={24} color="white" />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-        
-        <View>
-          <TouchableOpacity onPress={handleArrived}>
-            {reservation.arrived ? (
-              <AntDesign name="checksquareo" size={24} color="white" />
-            ) : (
-              <AntDesign name="closesquareo" size={24} color="white" />
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>:null}
+      ) : null}
 
       <Modal visible={openModal} transparent>
         <View style={styles.centeredView}>
